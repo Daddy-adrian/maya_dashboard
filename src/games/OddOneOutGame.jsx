@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import DynamicIslandHUD from '../components/DynamicIslandHUD';
 import RoundCompleteSheet from '../components/RoundCompleteSheet';
 import { useEngagement } from '../context/EngagementContext';
 import { assetUrl } from '../utils/assets';
-import { SPRING_SNAPPY, SPRING_BOUNCY, TAP_PROPS } from '../utils/motion';
-import { playCardSwipe, playCorrect, playNearMiss, playTap } from '../utils/sensory';
+import { SPRING_SNAPPY, TAP_PROPS } from '../utils/motion';
+import { playCardSwipe, playCorrect, playJackpot, playNearMiss, playTap } from '../utils/sensory';
 
 const TOTAL_ROUNDS = 10;
 
@@ -38,11 +39,26 @@ export default function OddOneOutGame({ onExit }) {
   const [banner, setBanner] = useState(null);
   const [round, setRound] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
-  const [wrongFlash, setWrongFlash] = useState(null);
   const [done, setDone] = useState(false);
 
+  // Slot machine states
+  const [leverPulled, setLeverPulled] = useState(false);
+  const [spinningReels, setSpinningReels] = useState([false, false, false]);
+  const [reelDisplay, setReelDisplay] = useState([null, null, null]);
+  const [reelResults, setReelResults] = useState([null, null, null]); // null | 'gold' | 'red'
+  const [phase, setPhase] = useState('placing'); // 'placing' | 'spinning' | 'evaluated'
+
   const slotRefs = useRef({});
-  const timerRef = useRef(null);
+  const timersRef = useRef([]);
+  const intervalsRef = useRef([]);
+  const didDragRef = useRef(false);
+
+  const clearAllTimers = () => {
+    timersRef.current.forEach((id) => clearTimeout(id));
+    timersRef.current = [];
+    intervalsRef.current.forEach((id) => clearInterval(id));
+    intervalsRef.current = [];
+  };
 
   useEffect(() => {
     let active = true;
@@ -57,12 +73,12 @@ export default function OddOneOutGame({ onExit }) {
       .catch(() => {});
     return () => {
       active = false;
-      if (timerRef.current) clearTimeout(timerRef.current);
+      clearAllTimers();
     };
   }, []);
 
   function createRound(pool, nextRoundNum, setting) {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    clearAllTimers();
     const targets = shuffle(pool).slice(0, 3);
     const distractor = pickDistractor(targets, pool);
     const mode =
@@ -72,18 +88,23 @@ export default function OddOneOutGame({ onExit }) {
           : 'pictures-to-words'
         : setting;
 
+    const orderedTargets = shuffle(targets);
     setRound({
       mode,
-      targets: shuffle(targets),
+      targets: orderedTargets,
       draggables: shuffle([...targets, distractor]),
       distractorId: distractor.id,
-      matched: {},
-      placedIds: [],
+      placed: {}, // { [targetId]: draggableItem }
       mistake: false,
       completed: false
     });
+    setReelDisplay(orderedTargets);
+    setSpinningReels([false, false, false]);
+    setReelResults([null, null, null]);
+    setLeverPulled(false);
+    setPhase('placing');
     setSelectedId(null);
-    setWrongFlash(null);
+    setBanner(null);
   }
 
   function startSession(nextMode = modeSetting) {
@@ -96,66 +117,182 @@ export default function OddOneOutGame({ onExit }) {
     if (items.length >= 4) createRound(items, 1, nextMode);
   }
 
-  function tryMatch(dragId, targetId) {
-    if (!round || round.completed) return;
-    if (round.matched[targetId] || round.placedIds.includes(dragId)) return;
+  function placeItemInSlot(dragId, targetId) {
+    if (!round || phase !== 'placing') return;
+    const item = round.draggables.find((d) => d.id === dragId);
+    if (!item) return;
 
-    if (dragId === targetId) {
-      const item = round.draggables.find((d) => d.id === dragId);
-      const nextCombo = combo + 1;
-      setCombo(nextCombo);
-      playCorrect(nextCombo);
-      const nextMatched = { ...round.matched, [targetId]: item };
-      const nextPlaced = [...round.placedIds, dragId];
-      const allDone = Object.keys(nextMatched).length === 3;
-
-      setRound({
-        ...round,
-        matched: nextMatched,
-        placedIds: nextPlaced,
-        completed: allDone
-      });
-      setSelectedId(null);
-      setBanner(nextCombo >= 3 ? { type: 'fire', text: '🔥 ON FIRE! 2x XP' } : null);
-
-      if (allDone) {
-        const pts = round.mistake ? 5 : 10;
-        setScore((s) => s + pts);
-        awardXP(pts + 5, 3);
-
-        timerRef.current = setTimeout(() => {
-          if (roundNum >= TOTAL_ROUNDS) {
-            setDone(true);
-            incrementQuest('q-ooo', 1);
-            maybeTriggerMysteryChest(false);
-          } else {
-            const next = roundNum + 1;
-            setRoundNum(next);
-            createRound(items, next, modeSetting);
-          }
-        }, 1200);
+    playTap();
+    setRound((prev) => {
+      if (!prev) return prev;
+      const nextPlaced = { ...prev.placed };
+      // If this draggable was already in another slot, remove it from there
+      for (const key of Object.keys(nextPlaced)) {
+        if (nextPlaced[key]?.id === dragId) {
+          delete nextPlaced[key];
+        }
       }
-    } else {
-      setCombo(0);
-      playNearMiss();
-      setRound({ ...round, mistake: true });
-      setWrongFlash({ dragId, targetId });
-      setSelectedId(null);
-      setBanner({ type: 'coach', text: 'Not quite! Try matching to another picture or word.' });
-      setTimeout(() => setWrongFlash(null), 420);
-    }
+      nextPlaced[targetId] = item;
+      return { ...prev, placed: nextPlaced };
+    });
+    setSelectedId(null);
+    setBanner(null);
+  }
+
+  function removeFromSlot(targetId) {
+    if (!round || phase !== 'placing') return;
+    if (!round.placed[targetId]) return;
+    playTap();
+    setRound((prev) => {
+      if (!prev) return prev;
+      const nextPlaced = { ...prev.placed };
+      delete nextPlaced[targetId];
+      return { ...prev, placed: nextPlaced };
+    });
   }
 
   function handleDragEnd(itemId, point) {
+    if (phase !== 'placing') return;
     for (const [tId, el] of Object.entries(slotRefs.current)) {
       if (!el) continue;
       const r = el.getBoundingClientRect();
       if (point.x >= r.left && point.x <= r.right && point.y >= r.top && point.y <= r.bottom) {
-        tryMatch(itemId, tId);
+        placeItemInSlot(itemId, tId);
         return;
       }
     }
   }
+
+  function pullHandle() {
+    if (!round || phase !== 'placing') return;
+    const placedCount = Object.keys(round.placed).length;
+    if (placedCount < 3) {
+      playNearMiss();
+      setBanner({
+        type: 'coach',
+        text: `Fill all 3 slots first (${placedCount}/3), then pull the handle!`
+      });
+      return;
+    }
+
+    clearAllTimers();
+    setPhase('spinning');
+    setLeverPulled(true);
+    setReelResults([null, null, null]);
+    setBanner(null);
+    setSpinningReels([true, true, true]);
+    playCardSwipe();
+
+    // Spring the handle back up after 320ms
+    timersRef.current.push(
+      setTimeout(() => {
+        setLeverPulled(false);
+      }, 320)
+    );
+
+    const spinPool = items.length >= 4 ? items : round.draggables;
+    const stopTimes = [680, 960, 1240];
+
+    // Spin each reel through random items from the pool, then land back on its target
+    round.targets.forEach((target, reelIdx) => {
+      const iv = setInterval(() => {
+        const randItem = spinPool[Math.floor(Math.random() * spinPool.length)];
+        setReelDisplay((prev) => {
+          const next = [...prev];
+          next[reelIdx] = randItem;
+          return next;
+        });
+      }, 85);
+      intervalsRef.current.push(iv);
+
+      const stopTimer = setTimeout(() => {
+        clearInterval(iv);
+        playTap();
+        setReelDisplay((prev) => {
+          const next = [...prev];
+          next[reelIdx] = target;
+          return next;
+        });
+        setSpinningReels((prev) => {
+          const next = [...prev];
+          next[reelIdx] = false;
+          return next;
+        });
+      }, stopTimes[reelIdx]);
+      timersRef.current.push(stopTimer);
+    });
+
+    // Evaluate all 3 slots right after the 3rd reel lands back in place
+    const evalTimer = setTimeout(() => {
+      const results = round.targets.map((t) => {
+        const placedItem = round.placed[t.id];
+        return placedItem && placedItem.id === t.id ? 'gold' : 'red';
+      });
+      setReelResults(results);
+      setPhase('evaluated');
+
+      const allCorrect = results.every((r) => r === 'gold');
+      if (allCorrect) {
+        const nextCombo = combo + 1;
+        setCombo(nextCombo);
+        playJackpot();
+        const pts = round.mistake ? 5 : 10;
+        setScore((s) => s + pts);
+        awardXP(pts + 8, 4);
+        setRound((prev) => (prev ? { ...prev, completed: true } : prev));
+        setBanner(
+          nextCombo >= 3
+            ? { type: 'fire', text: 'JACKPOT! All 3 matched — 2x XP!' }
+            : { type: 'fire', text: 'JACKPOT! All 3 matched!' }
+        );
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.6 },
+          colors: ['#E6B400', '#FFE066', '#FFFFFF', '#007AFF']
+        });
+
+        timersRef.current.push(
+          setTimeout(() => {
+            if (roundNum >= TOTAL_ROUNDS) {
+              setDone(true);
+              incrementQuest('q-ooo', 1);
+              maybeTriggerMysteryChest(false);
+            } else {
+              const next = roundNum + 1;
+              setRoundNum(next);
+              createRound(items, next, modeSetting);
+            }
+          }, 1500)
+        );
+      } else {
+        setCombo(0);
+        playNearMiss();
+        setRound((prev) => (prev ? { ...prev, mistake: true } : prev));
+        setBanner({
+          type: 'coach',
+          text: 'Red aura! Clearing all 3 slots — try again!'
+        });
+
+        // Show gold/red auras briefly, then reset all 3 slots so user starts over all 3
+        timersRef.current.push(
+          setTimeout(() => {
+            setRound((prev) => (prev ? { ...prev, placed: {} } : prev));
+            setReelResults([null, null, null]);
+            setPhase('placing');
+            setSelectedId(null);
+          }, 1350)
+        );
+      }
+    }, stopTimes[2] + 180);
+
+    timersRef.current.push(evalTimer);
+  }
+
+  const placedIds = round ? Object.values(round.placed).map((item) => item.id) : [];
+  const allThreeFilled = placedIds.length === 3;
+  const isWin = phase === 'evaluated' && reelResults.every((r) => r === 'gold');
+  const isFail = phase === 'evaluated' && reelResults.some((r) => r === 'red');
 
   return (
     <div className="focus-shell">
@@ -166,7 +303,7 @@ export default function OddOneOutGame({ onExit }) {
         onExit={onExit}
       />
 
-      <div className="game-stage-container">
+      <div className="game-stage-container" style={{ maxWidth: 960 }}>
         {/* Mode Switcher */}
         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
           {[
@@ -196,117 +333,157 @@ export default function OddOneOutGame({ onExit }) {
 
         {round && (
           <>
-            {/* 3 Target Drop Zones */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                gap: '0.85rem'
-              }}
-            >
-              {round.targets.map((t) => {
-                const matched = round.matched[t.id];
-                const isWrong = wrongFlash?.targetId === t.id;
-                return (
-                  <motion.button
-                    key={t.id}
-                    ref={(el) => {
-                      slotRefs.current[t.id] = el;
-                    }}
-                    type="button"
-                    animate={{
-                      opacity: round.completed ? 0.55 : 1,
-                      x: isWrong ? [-5, 5, -4, 4, 0] : 0
-                    }}
-                    transition={SPRING_SNAPPY}
-                    onClick={() => {
-                      if (selectedId && !matched) tryMatch(selectedId, t.id);
-                    }}
-                    style={{
-                      background: matched ? 'rgba(52, 199, 89, 0.14)' : '#FFFFFF',
-                      border: `2.5px solid ${
-                        matched ? '#34C759' : isWrong ? '#FF6B6B' : 'rgba(28, 28, 30, 0.09)'
-                      }`,
-                      borderRadius: 22,
-                      padding: '0.75rem',
-                      boxShadow: 'var(--shadow-ambient)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '0.6rem',
-                      cursor: 'pointer',
-                      fontFamily: 'inherit'
-                    }}
-                  >
-                    {round.mode === 'words-to-pictures' ? (
-                      <>
-                        <div
-                          style={{
-                            width: '100%',
-                            height: 175,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            background: 'var(--bg-subtle)',
-                            borderRadius: 16,
-                            padding: 6,
-                            overflow: 'hidden'
-                          }}
-                        >
-                          <img
-                            src={t.image}
-                            alt={t.word}
-                            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            width: '100%',
-                            minHeight: 46,
-                            borderRadius: 12,
-                            border: '2px dashed rgba(28,28,30,0.16)',
-                            display: 'grid',
-                            placeItems: 'center',
-                            fontWeight: 800,
-                            color: matched ? '#248A3D' : 'var(--text-muted)'
-                          }}
-                        >
-                          {matched ? `${matched.word} ✓` : 'Drop word'}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div style={{ fontSize: '1.35rem', fontWeight: 800, padding: '0.3rem 0' }}>{t.word}</div>
-                        <div
-                          style={{
-                            width: '100%',
-                            height: 150,
-                            borderRadius: 14,
-                            border: '2px dashed rgba(28,28,30,0.16)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: 6,
-                            overflow: 'hidden'
-                          }}
-                        >
-                          {matched ? (
+            {/* Apple Glass Casino Slot Machine */}
+            <div className="slot-machine-wrap">
+              <div className="slot-cabinet">
+                <div className="slot-marquee">
+                  <div className="slot-marquee__lights" aria-hidden="true">
+                    {[0, 1, 2].map((b) => (
+                      <span
+                        key={b}
+                        className={`slot-bulb ${
+                          isWin
+                            ? 'slot-bulb--win'
+                            : isFail
+                              ? 'slot-bulb--fail'
+                              : allThreeFilled
+                                ? 'slot-bulb--ready'
+                                : ''
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span>ODD ONE OUT • ROUND {roundNum} / {TOTAL_ROUNDS}</span>
+                  <div className="slot-marquee__lights" aria-hidden="true">
+                    {[0, 1, 2].map((b) => (
+                      <span
+                        key={b}
+                        className={`slot-bulb ${
+                          isWin
+                            ? 'slot-bulb--win'
+                            : isFail
+                              ? 'slot-bulb--fail'
+                              : allThreeFilled
+                                ? 'slot-bulb--ready'
+                                : ''
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3 Slot Machine Reels */}
+                <div className="slot-reels-bezel">
+                  {round.targets.map((target, idx) => {
+                    const placedItem = round.placed[target.id];
+                    const shownItem = reelDisplay[idx] || target;
+                    const isSpinning = spinningReels[idx];
+                    const result = reelResults[idx]; // null | 'gold' | 'red'
+
+                    return (
+                      <div
+                        key={target.id}
+                        ref={(el) => {
+                          slotRefs.current[target.id] = el;
+                        }}
+                        className={`slot-reel ${
+                          result === 'gold' ? 'slot-reel--gold' : result === 'red' ? 'slot-reel--red' : ''
+                        }`}
+                        onClick={() => {
+                          if (phase !== 'placing') return;
+                          if (selectedId) {
+                            placeItemInSlot(selectedId, target.id);
+                          } else if (placedItem) {
+                            removeFromSlot(target.id);
+                          }
+                        }}
+                      >
+                        {/* Spinning Reel Window */}
+                        <div className={`slot-reel-window ${isSpinning ? 'slot-reel-window--spinning' : ''}`}>
+                          {round.mode === 'words-to-pictures' ? (
                             <img
-                              src={matched.image}
-                              alt={matched.word}
+                              src={shownItem.image}
+                              alt={shownItem.word}
                               style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                             />
                           ) : (
-                            <span style={{ color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.88rem' }}>
-                              Drop picture
+                            <span
+                              className="slot-reel-word"
+                              style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)' }}
+                            >
+                              {shownItem.word}
                             </span>
                           )}
                         </div>
-                      </>
-                    )}
-                  </motion.button>
-                );
-              })}
+
+                        {/* Placed Word / Picture Drop Slot */}
+                        <button
+                          type="button"
+                          className={`slot-drop-box ${placedItem ? 'slot-drop-box--filled' : ''} ${
+                            result === 'gold'
+                              ? 'slot-drop-box--gold'
+                              : result === 'red'
+                                ? 'slot-drop-box--red'
+                                : ''
+                          }`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (phase !== 'placing') return;
+                            if (selectedId) {
+                              placeItemInSlot(selectedId, target.id);
+                            } else if (placedItem) {
+                              removeFromSlot(target.id);
+                            }
+                          }}
+                        >
+                          {placedItem ? (
+                            round.mode === 'words-to-pictures' ? (
+                              <span>
+                                {placedItem.word}
+                                {result === 'gold' ? ' ✓' : result === 'red' ? ' ✕' : ''}
+                              </span>
+                            ) : (
+                              <img
+                                src={placedItem.image}
+                                alt={placedItem.word}
+                                style={{ height: 42, maxWidth: '100%', objectFit: 'contain' }}
+                              />
+                            )
+                          ) : (
+                            <span>{round.mode === 'words-to-pictures' ? 'Drop word' : 'Drop picture'}</span>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Casino Lever Handle */}
+              <div className="slot-handle-mount">
+                <button
+                  type="button"
+                  className="slot-handle-btn"
+                  disabled={phase !== 'placing'}
+                  onClick={pullHandle}
+                  aria-label="Pull slot machine handle to spin"
+                >
+                  <div className="slot-handle-socket" aria-hidden="true" />
+                  <div className="slot-lever-rig">
+                    <div
+                      className={`slot-lever-knob ${allThreeFilled && phase === 'placing' ? 'slot-lever-knob--ready' : ''} ${
+                        leverPulled ? 'slot-lever-knob--pulled' : ''
+                      }`}
+                    >
+                      PULL
+                    </div>
+                    <div className={`slot-lever-shaft ${leverPulled ? 'slot-lever-shaft--pulled' : ''}`} />
+                  </div>
+                </button>
+                <span className="slot-handle-caption">
+                  {phase === 'spinning' ? 'Spinning…' : allThreeFilled ? 'Pull Handle' : `${placedIds.length}/3 Filled`}
+                </span>
+              </div>
             </div>
 
             {/* 4 Draggable Items Tray */}
@@ -321,61 +498,61 @@ export default function OddOneOutGame({ onExit }) {
               }}
             >
               {round.draggables.map((item) => {
-                const isPlaced = round.placedIds.includes(item.id);
+                const isPlaced = placedIds.includes(item.id);
                 const isOddFinale = round.completed && !isPlaced && item.id === round.distractorId;
                 const isSelected = selectedId === item.id;
-                const isWrong = wrongFlash?.dragId === item.id;
 
                 return (
                   <motion.button
                     key={item.id}
                     type="button"
-                    disabled={isPlaced}
-                    drag={!isPlaced && !round.completed}
+                    disabled={isPlaced || phase !== 'placing'}
+                    drag={!isPlaced && phase === 'placing'}
                     dragSnapToOrigin
-                    onDragStart={() => playCardSwipe()}
-                    onDragEnd={(_, info) => handleDragEnd(item.id, info.point)}
-                    whileDrag={{ scale: 1.12, rotate: 2, zIndex: 40 }}
-                    animate={
-                      isOddFinale
-                        ? { scale: 1.12, y: -6 }
-                        : isWrong
-                          ? { x: [-5, 5, -4, 4, 0] }
-                          : { scale: 1, y: 0 }
-                    }
-                    transition={isOddFinale ? SPRING_BOUNCY : SPRING_SNAPPY}
+                    onDragStart={() => {
+                      didDragRef.current = true;
+                      playCardSwipe();
+                    }}
+                    onDragEnd={(_, info) => {
+                      setTimeout(() => {
+                        didDragRef.current = false;
+                      }, 60);
+                      handleDragEnd(item.id, info.point);
+                    }}
+                    whileDrag={{ scale: 1.08, zIndex: 40 }}
+                    transition={SPRING_SNAPPY}
                     onClick={() => {
-                      if (!isPlaced && !round.completed) {
-                        playTap();
-                        setSelectedId(isSelected ? null : item.id);
-                      }
+                      if (didDragRef.current || isPlaced || phase !== 'placing') return;
+                      playTap();
+                      setSelectedId(isSelected ? null : item.id);
                     }}
                     style={{
-                      background: isOddFinale ? '#FFF9DB' : '#FFFFFF',
-                      border: `2.5px solid ${
+                      background: isOddFinale ? 'rgba(255, 249, 219, 0.95)' : 'rgba(255, 255, 255, 0.84)',
+                      border: `2px solid ${
                         isOddFinale
-                          ? '#FFCC00'
+                          ? '#E6B400'
                           : isSelected
-                            ? '#007AFF'
-                            : isWrong
-                              ? '#FF6B6B'
-                              : 'rgba(28, 28, 30, 0.1)'
+                            ? 'var(--apple-blue)'
+                            : 'rgba(255, 255, 255, 0.95)'
                       }`,
                       borderRadius: 18,
                       padding: round.mode === 'words-to-pictures' ? '0.85rem 0.5rem' : '0.45rem',
-                      minHeight: round.mode === 'words-to-pictures' ? 70 : 155,
-                      opacity: isPlaced ? 0.2 : 1,
-                      cursor: isPlaced ? 'default' : 'grab',
+                      minHeight: round.mode === 'words-to-pictures' ? 68 : 140,
+                      opacity: isPlaced ? 0.25 : 1,
+                      cursor: isPlaced || phase !== 'placing' ? 'default' : 'grab',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '0.35rem',
                       fontFamily: 'inherit',
-                      fontWeight: 800,
-                      fontSize: '1.2rem',
+                      fontWeight: 700,
+                      fontSize: '1.15rem',
+                      color: 'var(--text-primary)',
                       touchAction: 'none',
-                      boxShadow: isOddFinale ? '0 10px 26px rgba(255, 204, 0, 0.4)' : 'var(--shadow-ambient)'
+                      boxShadow: isOddFinale
+                        ? '0 0 22px rgba(230, 180, 0, 0.4)'
+                        : '0 0 0 1px rgba(15, 23, 42, 0.05), var(--shadow-ambient)'
                     }}
                   >
                     {round.mode === 'words-to-pictures' ? (
@@ -385,21 +562,21 @@ export default function OddOneOutGame({ onExit }) {
                         src={item.image}
                         alt={item.word}
                         draggable={false}
-                        style={{ maxWidth: '100%', maxHeight: 125, objectFit: 'contain', pointerEvents: 'none' }}
+                        style={{ maxWidth: '100%', maxHeight: 112, objectFit: 'contain', pointerEvents: 'none' }}
                       />
                     )}
                     {isOddFinale && (
                       <span
                         style={{
-                          fontSize: '0.75rem',
+                          fontSize: '0.72rem',
                           fontWeight: 800,
-                          padding: '0.2rem 0.55rem',
+                          padding: '0.18rem 0.55rem',
                           borderRadius: 999,
-                          background: '#FF9500',
+                          background: '#E6B400',
                           color: '#FFFFFF'
                         }}
                       >
-                        ✨ The Odd One Out!
+                        ✨ Odd One Out!
                       </span>
                     )}
                   </motion.button>
@@ -414,7 +591,7 @@ export default function OddOneOutGame({ onExit }) {
         {done && (
           <RoundCompleteSheet
             title="All 10 Rounds Complete!"
-            subtitle={`Awesome matching! You scored ${score} / ${TOTAL_ROUNDS * 10} points.`}
+            subtitle={`Jackpot! You scored ${score} / ${TOTAL_ROUNDS * 10} points.`}
             xpEarned={score + 20}
             nextLabel="Play 10 More"
             onNext={() => startSession(modeSetting)}

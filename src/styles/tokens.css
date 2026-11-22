@@ -983,6 +983,317 @@ h1, h2, h3, h4 {
   box-shadow: 0 0 0 3px rgba(46, 184, 100, 0.24);
 }
 
+/* ==========================================================================
+   Odd One Out — Apple Glass Casino Slot Machine
+   ========================================================================== */
+
+.slot-machine-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: 920px;
+  margin-inline: auto;
+}
+
+.slot-cabinet {
+  flex: 1;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84) 0%, rgba(244, 247, 252, 0.74) 100%);
+  backdrop-filter: blur(30px) saturate(170%);
+  -webkit-backdrop-filter: blur(30px) saturate(170%);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  border-radius: 30px;
+  padding: 1.15rem 1.25rem 1.25rem;
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.06),
+    0 18px 46px rgba(15, 23, 42, 0.08),
+    inset 0 2px 0 rgba(255, 255, 255, 0.96);
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.slot-marquee {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.48rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.slot-marquee__lights {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.slot-bulb {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.14);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slot-bulb--ready {
+  background: #E6B400;
+  box-shadow: 0 0 8px rgba(230, 180, 0, 0.7);
+}
+
+.slot-bulb--win {
+  background: #2EB864;
+  box-shadow: 0 0 8px rgba(46, 184, 100, 0.7);
+}
+
+.slot-bulb--fail {
+  background: #E5484D;
+  box-shadow: 0 0 8px rgba(229, 72, 77, 0.7);
+}
+
+.slot-reels-bezel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+  padding: 0.85rem;
+  border-radius: 22px;
+  background: rgba(236, 240, 247, 0.65);
+  border: 1px solid rgba(15, 23, 42, 0.07);
+  box-shadow: inset 0 3px 10px rgba(15, 23, 42, 0.05);
+}
+
+.slot-reel {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow:
+    0 0 0 1px rgba(15, 23, 42, 0.05),
+    0 6px 16px rgba(15, 23, 42, 0.05);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.slot-reel--gold {
+  border-color: #E6B400;
+  background: linear-gradient(180deg, rgba(255, 252, 235, 0.98) 0%, rgba(255, 248, 212, 0.92) 100%);
+  box-shadow:
+    0 0 0 3px rgba(230, 180, 0, 0.35),
+    0 0 28px rgba(255, 204, 0, 0.55),
+    0 8px 20px rgba(217, 164, 4, 0.2);
+}
+
+.slot-reel--red {
+  border-color: #E5484D;
+  background: linear-gradient(180deg, rgba(255, 245, 245, 0.98) 0%, rgba(255, 232, 233, 0.92) 100%);
+  box-shadow:
+    0 0 0 3px rgba(229, 72, 77, 0.32),
+    0 0 28px rgba(229, 72, 77, 0.45),
+    0 8px 20px rgba(229, 72, 77, 0.18);
+}
+
+.slot-reel-window {
+  position: relative;
+  width: 100%;
+  height: 168px;
+  border-radius: 14px;
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: inset 0 6px 12px rgba(15, 23, 42, 0.05), inset 0 -6px 12px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+
+.slot-reel-window--spinning img,
+.slot-reel-window--spinning .slot-reel-word {
+  filter: blur(1.4px);
+}
+
+.slot-drop-box {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 12px;
+  border: 1.5px dashed rgba(15, 23, 42, 0.16);
+  background: rgba(244, 247, 252, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.slot-drop-box--filled {
+  border-style: solid;
+  border-color: rgba(0, 122, 255, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.slot-drop-box--gold {
+  border-color: #E6B400;
+  background: rgba(255, 249, 219, 0.95);
+  color: #8A5A00;
+}
+
+.slot-drop-box--red {
+  border-color: #E5484D;
+  background: rgba(255, 236, 237, 0.95);
+  color: #A61B22;
+}
+
+/* Side Lever Handle */
+.slot-handle-mount {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 0;
+  flex-shrink: 0;
+}
+
+.slot-handle-btn {
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.4rem 0.25rem 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-family: inherit;
+}
+
+.slot-handle-btn:disabled {
+  cursor: not-allowed;
+}
+
+.slot-handle-socket {
+  width: 18px;
+  height: 54px;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(180deg, #E2E7F0 0%, #CFD6E3 50%, #E6EBF3 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-left: none;
+  box-shadow: 3px 4px 10px rgba(15, 23, 42, 0.1);
+}
+
+.slot-lever-rig {
+  position: relative;
+  width: 52px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.slot-lever-shaft {
+  position: absolute;
+  bottom: 58px;
+  left: 50%;
+  width: 10px;
+  height: 82px;
+  margin-left: -5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #CBD5E1 0%, #FFFFFF 45%, #B8C4D4 100%);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+  transform-origin: bottom center;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.slot-lever-shaft--pulled {
+  transform: scaleY(0.38) translateY(34px);
+}
+
+.slot-lever-knob {
+  position: relative;
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #FFFFFF 0%, #E5E9F0 45%, #C5CEDB 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.16);
+  display: grid;
+  place-items: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slot-lever-knob--ready {
+  background: radial-gradient(circle at 32% 28%, #FFE88A 0%, #F2BE22 55%, #C99100 100%);
+  color: #5A3B00;
+  box-shadow: 0 0 0 4px rgba(242, 190, 34, 0.24), 0 8px 20px rgba(201, 145, 0, 0.34);
+}
+
+.slot-lever-knob--pulled {
+  transform: translateY(74px);
+}
+
+.slot-handle-caption {
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 720px) {
+  .slot-machine-wrap {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .slot-handle-socket {
+    display: none;
+  }
+  .slot-lever-rig {
+    height: auto;
+    width: auto;
+  }
+  .slot-lever-shaft {
+    display: none;
+  }
+  .slot-lever-knob {
+    width: auto;
+    height: auto;
+    border-radius: 999px;
+    padding: 0.65rem 1.4rem;
+    font-size: 0.92rem;
+  }
+  .slot-lever-knob--pulled {
+    transform: scale(0.95);
+  }
+  .slot-reels-bezel {
+    gap: 0.45rem;
+    padding: 0.5rem;
+  }
+  .slot-reel-window {
+    height: 120px;
+  }
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .story-ring-outer--active,
