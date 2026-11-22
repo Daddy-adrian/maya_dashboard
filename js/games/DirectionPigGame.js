@@ -130,6 +130,10 @@ export function mountDirectionPigGame(container, { onBackToDashboard, announce }
     wrongIds = new Set();
     hadMistakeThisRound = false;
     roundSolved = false;
+    DIRECTION_ITEMS.forEach((item) => {
+      const pre = new Image();
+      pre.src = item.image;
+    });
     render();
     announce('Started Direction Pig.');
   }

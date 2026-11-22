@@ -160,6 +160,10 @@ export function mountAmIsAreTetrisGame(container, { initialMode = 'tetris', onBa
   function startNewRound() {
     clearTimers();
     roundCards = buildRoundCards();
+    roundCards.forEach((c) => {
+      const pre = new Image();
+      pre.src = c.image;
+    });
     spawnedCount = 0;
     resolvedCount = 0;
     activeCards = [];

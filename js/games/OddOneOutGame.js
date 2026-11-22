@@ -6,18 +6,18 @@
 const TOTAL_ROUNDS = 10;
 
 const FALLBACK_ITEMS = [
-  { id: 'cat', word: 'cat', image: './odd_one_out_img/cat.png', category: 'animals', vowel: 'a' },
-  { id: 'hat', word: 'hat', image: './odd_one_out_img/hat.png', category: 'objects', vowel: 'a' },
-  { id: 'bat', word: 'bat', image: './odd_one_out_img/bat.png', category: 'animals', vowel: 'a' },
-  { id: 'bag', word: 'bag', image: './odd_one_out_img/bag.png', category: 'objects', vowel: 'a' },
-  { id: 'dog', word: 'dog', image: './odd_one_out_img/dog.png', category: 'animals', vowel: 'o' },
-  { id: 'log', word: 'log', image: './odd_one_out_img/log.png', category: 'objects', vowel: 'o' },
-  { id: 'pig', word: 'pig', image: './odd_one_out_img/pig.png', category: 'animals', vowel: 'i' },
-  { id: 'bug', word: 'bug', image: './odd_one_out_img/bug.png', category: 'animals', vowel: 'u' },
-  { id: 'bus', word: 'bus', image: './odd_one_out_img/bus.png', category: 'transport', vowel: 'u' },
-  { id: 'jet', word: 'jet', image: './odd_one_out_img/jet.png', category: 'transport', vowel: 'e' },
-  { id: 'cup', word: 'cup', image: './odd_one_out_img/cup.png', category: 'objects', vowel: 'u' },
-  { id: 'sun', word: 'sun', image: './odd_one_out_img/sun.png', category: 'objects', vowel: 'u' }
+  { id: 'cat', word: 'cat', image: './odd_one_out_img/cat.jpeg', category: 'animals', vowel: 'a' },
+  { id: 'hat', word: 'hat', image: './odd_one_out_img/hat.jpeg', category: 'objects', vowel: 'a' },
+  { id: 'bat', word: 'bat', image: './odd_one_out_img/bat.jpeg', category: 'animals', vowel: 'a' },
+  { id: 'bag', word: 'bag', image: './odd_one_out_img/bag.jpeg', category: 'objects', vowel: 'a' },
+  { id: 'dog', word: 'dog', image: './odd_one_out_img/dog.jpeg', category: 'animals', vowel: 'o' },
+  { id: 'log', word: 'log', image: './odd_one_out_img/log.jpeg', category: 'objects', vowel: 'o' },
+  { id: 'pig', word: 'pig', image: './odd_one_out_img/pig.jpeg', category: 'animals', vowel: 'i' },
+  { id: 'bug', word: 'bug', image: './odd_one_out_img/bug.jpeg', category: 'animals', vowel: 'u' },
+  { id: 'bus', word: 'bus', image: './odd_one_out_img/bus.jpeg', category: 'transport', vowel: 'u' },
+  { id: 'jet', word: 'jet', image: './odd_one_out_img/jet.jpeg', category: 'transport', vowel: 'e' },
+  { id: 'cup', word: 'cup', image: './odd_one_out_img/cup.jpeg', category: 'objects', vowel: 'u' },
+  { id: 'sun', word: 'sun', image: './odd_one_out_img/sun.jpeg', category: 'objects', vowel: 'u' }
 ];
 
 function shuffle(arr) {
