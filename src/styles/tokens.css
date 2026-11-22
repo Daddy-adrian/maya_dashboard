@@ -984,8 +984,29 @@ h1, h2, h3, h4 {
 }
 
 /* ==========================================================================
-   Odd One Out — Apple Glass Casino Slot Machine
+   Odd One Out — Dark Casino Glass Slot Machine
    ========================================================================== */
+
+.focus-shell--casino {
+  background-color: #0B0E14;
+  background-image:
+    radial-gradient(at 50% 0%, rgba(242, 190, 34, 0.14) 0px, transparent 52%),
+    radial-gradient(at 15% 85%, rgba(16, 110, 74, 0.22) 0px, transparent 48%),
+    radial-gradient(at 85% 80%, rgba(180, 42, 62, 0.14) 0px, transparent 48%),
+    linear-gradient(180deg, #0D111A 0%, #090C12 100%);
+  color: #F5F5F7;
+}
+
+.focus-shell--casino .btn-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.focus-shell--casino .btn-pill:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .slot-machine-wrap {
   display: flex;
@@ -999,16 +1020,17 @@ h1, h2, h3, h4 {
 
 .slot-cabinet {
   flex: 1;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84) 0%, rgba(244, 247, 252, 0.74) 100%);
-  backdrop-filter: blur(30px) saturate(170%);
-  -webkit-backdrop-filter: blur(30px) saturate(170%);
-  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  background: linear-gradient(180deg, rgba(28, 33, 46, 0.92) 0%, rgba(16, 20, 29, 0.95) 100%);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border: 1.5px solid rgba(242, 190, 34, 0.34);
   border-radius: 30px;
   padding: 1.15rem 1.25rem 1.25rem;
   box-shadow:
-    0 0 0 1px rgba(15, 23, 42, 0.06),
-    0 18px 46px rgba(15, 23, 42, 0.08),
-    inset 0 2px 0 rgba(255, 255, 255, 0.96);
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(242, 190, 34, 0.08),
+    inset 0 1px 0 rgba(255, 232, 160, 0.25);
   display: flex;
   flex-direction: column;
   gap: 0.95rem;
@@ -1018,16 +1040,16 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.48rem 1rem;
+  padding: 0.52rem 1rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  background: linear-gradient(90deg, rgba(14, 17, 25, 0.9), rgba(34, 28, 18, 0.9), rgba(14, 17, 25, 0.9));
+  border: 1px solid rgba(242, 190, 34, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 224, 130, 0.2);
   font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: #F6D265;
 }
 
 .slot-marquee__lights {
@@ -1040,23 +1062,23 @@ h1, h2, h3, h4 {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(15, 23, 42, 0.14);
+  background: rgba(255, 255, 255, 0.18);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .slot-bulb--ready {
-  background: #E6B400;
-  box-shadow: 0 0 8px rgba(230, 180, 0, 0.7);
+  background: #FFD54F;
+  box-shadow: 0 0 10px rgba(255, 213, 79, 0.9);
 }
 
 .slot-bulb--win {
-  background: #2EB864;
-  box-shadow: 0 0 8px rgba(46, 184, 100, 0.7);
+  background: #34D399;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.9);
 }
 
 .slot-bulb--fail {
-  background: #E5484D;
-  box-shadow: 0 0 8px rgba(229, 72, 77, 0.7);
+  background: #FF4D57;
+  box-shadow: 0 0 10px rgba(255, 77, 87, 0.9);
 }
 
 .slot-reels-bezel {
@@ -1065,42 +1087,40 @@ h1, h2, h3, h4 {
   gap: 0.8rem;
   padding: 0.85rem;
   border-radius: 22px;
-  background: rgba(236, 240, 247, 0.65);
-  border: 1px solid rgba(15, 23, 42, 0.07);
-  box-shadow: inset 0 3px 10px rgba(15, 23, 42, 0.05);
+  background: rgba(8, 10, 16, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 4px 16px rgba(0, 0, 0, 0.65);
 }
 
 .slot-reel {
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid rgba(255, 255, 255, 0.95);
+  background: rgba(24, 29, 41, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 18px;
   padding: 0.65rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
-  box-shadow:
-    0 0 0 1px rgba(15, 23, 42, 0.05),
-    0 6px 16px rgba(15, 23, 42, 0.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
   transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
 
 .slot-reel--gold {
-  border-color: #E6B400;
-  background: linear-gradient(180deg, rgba(255, 252, 235, 0.98) 0%, rgba(255, 248, 212, 0.92) 100%);
+  border-color: #FFD54F;
+  background: linear-gradient(180deg, rgba(64, 50, 16, 0.92) 0%, rgba(36, 28, 10, 0.96) 100%);
   box-shadow:
-    0 0 0 3px rgba(230, 180, 0, 0.35),
-    0 0 28px rgba(255, 204, 0, 0.55),
-    0 8px 20px rgba(217, 164, 4, 0.2);
+    0 0 0 3px rgba(255, 213, 79, 0.45),
+    0 0 34px rgba(255, 204, 0, 0.72),
+    0 10px 26px rgba(217, 164, 4, 0.35);
 }
 
 .slot-reel--red {
-  border-color: #E5484D;
-  background: linear-gradient(180deg, rgba(255, 245, 245, 0.98) 0%, rgba(255, 232, 233, 0.92) 100%);
+  border-color: #FF4D57;
+  background: linear-gradient(180deg, rgba(68, 18, 24, 0.92) 0%, rgba(38, 11, 16, 0.96) 100%);
   box-shadow:
-    0 0 0 3px rgba(229, 72, 77, 0.32),
-    0 0 28px rgba(229, 72, 77, 0.45),
-    0 8px 20px rgba(229, 72, 77, 0.18);
+    0 0 0 3px rgba(255, 77, 87, 0.45),
+    0 0 34px rgba(255, 59, 69, 0.7),
+    0 10px 26px rgba(229, 72, 77, 0.35);
 }
 
 .slot-reel-window {
@@ -1108,9 +1128,9 @@ h1, h2, h3, h4 {
   width: 100%;
   height: 168px;
   border-radius: 14px;
-  background: #FFFFFF;
-  border: 1px solid rgba(15, 23, 42, 0.06);
-  box-shadow: inset 0 6px 12px rgba(15, 23, 42, 0.05), inset 0 -6px 12px rgba(15, 23, 42, 0.05);
+  background: #FCFBF8;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 8px 14px rgba(0, 0, 0, 0.14), inset 0 -8px 14px rgba(0, 0, 0, 0.14);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -1127,15 +1147,15 @@ h1, h2, h3, h4 {
   width: 100%;
   min-height: 48px;
   border-radius: 12px;
-  border: 1.5px dashed rgba(15, 23, 42, 0.16);
-  background: rgba(244, 247, 252, 0.72);
+  border: 1.5px dashed rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.35rem 0.5rem;
   font-weight: 700;
   font-size: 1rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.55);
   cursor: pointer;
   font-family: inherit;
   transition: background-color 0.15s ease, border-color 0.15s ease;
@@ -1143,22 +1163,30 @@ h1, h2, h3, h4 {
 
 .slot-drop-box--filled {
   border-style: solid;
-  border-color: rgba(0, 122, 255, 0.35);
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--text-primary);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  border-color: rgba(242, 190, 34, 0.65);
+  background: rgba(255, 255, 255, 0.94);
+  color: #1D1D1F;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
 }
 
 .slot-drop-box--gold {
-  border-color: #E6B400;
-  background: rgba(255, 249, 219, 0.95);
-  color: #8A5A00;
+  border-color: #FFD54F;
+  background: #FFF6CC;
+  color: #7A4F00;
 }
 
 .slot-drop-box--red {
-  border-color: #E5484D;
-  background: rgba(255, 236, 237, 0.95);
-  color: #A61B22;
+  border-color: #FF4D57;
+  background: #FFE2E4;
+  color: #9B131B;
+}
+
+.slot-tray-dark {
+  background: rgba(22, 27, 38, 0.84);
+  backdrop-filter: blur(26px) saturate(150%);
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  border: 1px solid rgba(242, 190, 34, 0.24);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 /* Side Lever Handle */
@@ -1189,10 +1217,10 @@ h1, h2, h3, h4 {
   width: 18px;
   height: 54px;
   border-radius: 0 12px 12px 0;
-  background: linear-gradient(180deg, #E2E7F0 0%, #CFD6E3 50%, #E6EBF3 100%);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(180deg, #524321 0%, #D4A93A 48%, #47391A 100%);
+  border: 1px solid rgba(255, 224, 130, 0.45);
   border-left: none;
-  box-shadow: 3px 4px 10px rgba(15, 23, 42, 0.1);
+  box-shadow: 3px 4px 12px rgba(0, 0, 0, 0.45);
 }
 
 .slot-lever-rig {
@@ -1213,8 +1241,8 @@ h1, h2, h3, h4 {
   height: 82px;
   margin-left: -5px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #CBD5E1 0%, #FFFFFF 45%, #B8C4D4 100%);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+  background: linear-gradient(90deg, #8A7132 0%, #FFF0B3 45%, #755E26 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
   transform-origin: bottom center;
   transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -1226,25 +1254,26 @@ h1, h2, h3, h4 {
 .slot-lever-knob {
   position: relative;
   z-index: 2;
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, #FFFFFF 0%, #E5E9F0 45%, #C5CEDB 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.95);
-  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.16);
+  background: radial-gradient(circle at 32% 28%, #FF7A80 0%, #D92632 55%, #7F1119 100%);
+  border: 1.5px solid rgba(255, 220, 220, 0.55);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
   display: grid;
   place-items: center;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: var(--text-secondary);
+  color: #FFFFFF;
   transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .slot-lever-knob--ready {
-  background: radial-gradient(circle at 32% 28%, #FFE88A 0%, #F2BE22 55%, #C99100 100%);
-  color: #5A3B00;
-  box-shadow: 0 0 0 4px rgba(242, 190, 34, 0.24), 0 8px 20px rgba(201, 145, 0, 0.34);
+  background: radial-gradient(circle at 32% 28%, #FFF0A6 0%, #F2BE22 52%, #B88000 100%);
+  color: #4A3000;
+  border-color: rgba(255, 245, 200, 0.9);
+  box-shadow: 0 0 0 4px rgba(255, 213, 79, 0.28), 0 0 26px rgba(255, 204, 0, 0.65);
 }
 
 .slot-lever-knob--pulled {
@@ -1252,12 +1281,12 @@ h1, h2, h3, h4 {
 }
 
 .slot-handle-caption {
-  margin-top: 0.35rem;
+  margin-top: 0.4rem;
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--text-secondary);
+  color: rgba(246, 210, 101, 0.86);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 @media (max-width: 720px) {

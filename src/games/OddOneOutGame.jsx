@@ -295,7 +295,7 @@ export default function OddOneOutGame({ onExit }) {
   const isFail = phase === 'evaluated' && reelResults.some((r) => r === 'red');
 
   return (
-    <div className="focus-shell">
+    <div className="focus-shell focus-shell--casino">
       <DynamicIslandHUD
         progress={done ? 1 : (roundNum - 1) / TOTAL_ROUNDS}
         combo={combo}
@@ -317,7 +317,11 @@ export default function OddOneOutGame({ onExit }) {
               className="btn-pill"
               style={
                 modeSetting === m.id
-                  ? { background: 'var(--apple-blue)', color: '#FFF', borderColor: 'transparent' }
+                  ? {
+                      background: 'linear-gradient(135deg, #F2BE22, #D49B00)',
+                      color: '#2B1B00',
+                      borderColor: 'rgba(255, 240, 180, 0.65)'
+                    }
                   : {}
               }
               {...TAP_PROPS}
@@ -488,7 +492,7 @@ export default function OddOneOutGame({ onExit }) {
 
             {/* 4 Draggable Items Tray */}
             <div
-              className="glass-light"
+              className="slot-tray-dark"
               style={{
                 borderRadius: 24,
                 padding: '0.9rem',
