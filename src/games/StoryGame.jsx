@@ -69,8 +69,8 @@ export default function StoryGame({ onExit }) {
           if (!res.ok) continue;
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0 && active) {
-            const randomized = shuffle(data).map(randomizeStoryChoices);
-            setStories(randomized);
+            const ordered = [...data].sort((a, b) => a.id - b.id).map(randomizeStoryChoices);
+            setStories(ordered);
             setCurrentIdx(0);
             return;
           }
