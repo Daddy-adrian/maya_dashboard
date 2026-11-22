@@ -6,24 +6,24 @@
   /* Typography */
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
 
-  /* Apple Glass & Soft White Palette */
-  --bg-canvas: #F4F6F9;
-  --bg-surface: rgba(255, 255, 255, 0.72);
-  --bg-surface-solid: #FCFCFD;
-  --bg-subtle: rgba(242, 245, 249, 0.72);
+  /* Eggshell & Soft Glass Palette */
+  --bg-canvas: #F3EFE4;
+  --bg-surface: rgba(250, 247, 238, 0.82);
+  --bg-surface-solid: #FAF7EE;
+  --bg-subtle: rgba(242, 237, 224, 0.78);
   --text-primary: #1D1D1F;
   --text-secondary: #63636A;
   --text-muted: #8E8E93;
-  --border-hairline: rgba(15, 23, 42, 0.08);
-  --border-glass: rgba(255, 255, 255, 0.85);
+  --border-hairline: rgba(48, 42, 28, 0.09);
+  --border-glass: rgba(252, 249, 242, 0.88);
 
-  /* Frosted Apple Glass Layers */
-  --glass-light-bg: rgba(255, 255, 255, 0.64);
-  --glass-light-border: rgba(255, 255, 255, 0.86);
-  --glass-strong-bg: rgba(255, 255, 255, 0.78);
-  --glass-dark-bg: rgba(255, 255, 255, 0.72);
-  --glass-dark-border: rgba(255, 255, 255, 0.85);
-  --glass-specular: inset 0 1px 0 rgba(255, 255, 255, 0.92), inset 0 -1px 0 rgba(255, 255, 255, 0.28);
+  /* Frosted Eggshell Glass Layers */
+  --glass-light-bg: rgba(250, 247, 238, 0.76);
+  --glass-light-border: rgba(252, 249, 242, 0.88);
+  --glass-strong-bg: rgba(250, 247, 238, 0.88);
+  --glass-dark-bg: rgba(250, 247, 238, 0.82);
+  --glass-dark-border: rgba(252, 249, 242, 0.88);
+  --glass-specular: inset 0 1px 0 rgba(255, 253, 247, 0.9), inset 0 -1px 0 rgba(255, 253, 247, 0.3);
 
   /* Refined Apple System Accents */
   --apple-blue: #007AFF;
@@ -60,11 +60,10 @@ body {
   color: var(--text-primary);
   background-color: var(--bg-canvas);
   background-image:
-    radial-gradient(at 14% 10%, rgba(255, 255, 255, 0.95) 0px, transparent 48%),
-    radial-gradient(at 86% 12%, rgba(218, 232, 252, 0.48) 0px, transparent 46%),
-    radial-gradient(at 82% 88%, rgba(232, 236, 248, 0.55) 0px, transparent 50%),
-    radial-gradient(at 12% 86%, rgba(246, 248, 252, 0.85) 0px, transparent 50%),
-    linear-gradient(180deg, #F8FAFC 0%, #EEF2F7 100%);
+    radial-gradient(at 14% 10%, rgba(252, 249, 240, 0.95) 0px, transparent 48%),
+    radial-gradient(at 86% 12%, rgba(239, 233, 218, 0.65) 0px, transparent 46%),
+    radial-gradient(at 82% 88%, rgba(236, 230, 214, 0.6) 0px, transparent 50%),
+    linear-gradient(180deg, #F6F2E8 0%, #EFE9DA 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
@@ -1764,10 +1763,10 @@ h1, h2, h3, h4 {
   top: 0;
   height: 100dvh;
   padding: 1.5rem 0.85rem 1.25rem;
-  background: rgba(255, 255, 255, 0.84);
+  background: rgba(250, 247, 238, 0.9);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-right: 1px solid rgba(15, 23, 42, 0.08);
+  border-right: 1px solid rgba(48, 42, 28, 0.09);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -1850,11 +1849,11 @@ h1, h2, h3, h4 {
   overflow-x: auto;
   padding: 0.85rem 1rem;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(250, 247, 238, 0.92);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.03);
+  border: 1px solid rgba(48, 42, 28, 0.09);
+  box-shadow: 0 2px 12px rgba(48, 42, 28, 0.04);
   scrollbar-width: none;
 }
 
@@ -1887,11 +1886,11 @@ h1, h2, h3, h4 {
 }
 
 .ig-story-ring--active {
-  background: linear-gradient(45deg, #FEDA75 0%, #FA7E1E 25%, #D62976 55%, #962FBF 80%, #4F5BD5 100%);
+  background: linear-gradient(135deg, #34C759 0%, #24A148 100%);
 }
 
 .ig-story-ring--done {
-  background: #D8DCE3;
+  background: #D5D0C3;
 }
 
 .ig-story-avatar {
@@ -1899,8 +1898,8 @@ h1, h2, h3, h4 {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #FFFFFF;
-  border: 2.5px solid #FFFFFF;
+  background: #FAF7EE;
+  border: 2.5px solid #FAF7EE;
   display: grid;
   place-items: center;
   font-size: 1.45rem;
@@ -1913,9 +1912,9 @@ h1, h2, h3, h4 {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #2EB864;
+  background: #34C759;
   color: #FFFFFF;
-  border: 2px solid #FFFFFF;
+  border: 2px solid #FAF7EE;
   display: grid;
   place-items: center;
 }
@@ -1942,13 +1941,13 @@ h1, h2, h3, h4 {
 }
 
 .ig-post {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(250, 247, 238, 0.94);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(48, 42, 28, 0.09);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 4px 20px rgba(48, 42, 28, 0.04);
 }
 
 .ig-post__header {
@@ -1969,7 +1968,7 @@ h1, h2, h3, h4 {
   height: 38px;
   border-radius: 50%;
   padding: 2px;
-  background: linear-gradient(45deg, #FEDA75, #FA7E1E, #D62976, #962FBF);
+  background: linear-gradient(135deg, #34C759 0%, #24A148 100%);
   display: grid;
   place-items: center;
 }
@@ -1978,8 +1977,8 @@ h1, h2, h3, h4 {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #FFFFFF;
-  border: 2px solid #FFFFFF;
+  background: #FAF7EE;
+  border: 2px solid #FAF7EE;
   display: grid;
   place-items: center;
   font-size: 1rem;
@@ -2197,8 +2196,8 @@ h1, h2, h3, h4 {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #FAF7EE;
+  border: 1px solid rgba(48, 42, 28, 0.09);
   display: grid;
   place-items: center;
   font-size: 1.1rem;
@@ -2255,10 +2254,10 @@ h1, h2, h3, h4 {
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem 1rem;
-    background: rgba(255, 255, 255, 0.88);
+    background: rgba(250, 247, 238, 0.92);
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
-    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    border-bottom: 1px solid rgba(48, 42, 28, 0.09);
   }
   .ig-feed-col {
     padding: 0.85rem 0.75rem 2.5rem;
