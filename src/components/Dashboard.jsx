@@ -17,7 +17,8 @@ import {
   Coins,
   Check,
   Play,
-  BadgeCheck
+  BadgeCheck,
+  Lock
 } from 'lucide-react';
 import { useEngagement, DAILY_GOAL_XP, loadDirectionPigSrs } from '../context/EngagementContext';
 import { assetUrl } from '../utils/assets';
@@ -35,6 +36,18 @@ export const PHONIX_MODULES = [
     previewBg: 'linear-gradient(135deg, #F8FAFC 0%, #EEF4FF 100%)',
     likes: 128,
     description: 'Read 28 illustrated stories with Karaoke Read Aloud and swipe through Set A & Set B.'
+  },
+  {
+    id: 'next-level-reading',
+    handle: 'next.level.reading',
+    title: 'Next Level Reading',
+    subtitle: 'Locked • 12 Advanced Stories',
+    icon: '🔒',
+    previewImg: 'story_images/10.jpeg',
+    previewBg: 'linear-gradient(135deg, #F3EFE4 0%, #E7F5EC 100%)',
+    likes: 64,
+    locked: true,
+    description: '12 longer comprehension stories with Set A & Set B questions. Teacher code required to unlock.'
   },
   {
     id: 'cvc-rummikub',
@@ -179,6 +192,17 @@ export default function Dashboard({ onOpenModule }) {
           >
             <BookOpen size={22} strokeWidth={2} />
             <span>Stories</span>
+          </button>
+          <button
+            type="button"
+            className="ig-nav-item"
+            onClick={() => {
+              playTap();
+              onOpenModule('next-level-reading', null);
+            }}
+          >
+            <Lock size={21} strokeWidth={2} />
+            <span>Next Level</span>
           </button>
           <button
             type="button"
@@ -436,7 +460,7 @@ export default function Dashboard({ onOpenModule }) {
                           onOpenModule(mod.id, null);
                         }}
                       >
-                        Open Game
+                        {mod.locked ? 'Unlock with Code' : 'Open Game'}
                       </button>
                     )}
                   </div>
@@ -493,7 +517,7 @@ export default function Dashboard({ onOpenModule }) {
         {/* Suggested for you (1-click jump to any game) */}
         <div className="ig-suggested-head">
           <span>Suggested for you</span>
-          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>All 6 Games</span>
+          <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>All {PHONIX_MODULES.length} Games</span>
         </div>
 
         <div className="ig-suggested-list">

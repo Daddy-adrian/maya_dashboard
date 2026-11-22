@@ -1,0 +1,636 @@
+{
+  "stories": [
+    {
+      "id": 1,
+      "level": "Next Level Reading",
+      "title": "Near the Shop",
+      "sentences": [
+        "Tom and Mia are near the shop in the morning.",
+        "Tom has milk and a fresh bun in his hand.",
+        "Mia has a red hat.",
+        "A thin cat is under the desk by the wall.",
+        "They stop to give the cat a bit of bread before school."
+      ],
+      "setA": [
+        {
+          "question": "Where is the thin cat?",
+          "options": [
+            "Under the desk by the wall",
+            "On top of the bus",
+            "Inside a black sock"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What does Tom have in his hand?",
+          "options": [
+            "Milk and a fresh bun",
+            "A flag and a whip",
+            "A frog and a lock"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "Who has a red hat?",
+          "options": [
+            "Mia",
+            "Tom",
+            "The cat"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "When do they stop to give the cat bread?",
+          "options": [
+            "Before school",
+            "At night",
+            "In winter"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "level": "Next Level Reading",
+      "title": "At the Park",
+      "sentences": [
+        "I am at the park with my brother.",
+        "We have a big black dog.",
+        "The dog sees a frog by the plant.",
+        "It can jump fast.",
+        "My brother has a cup of water because the sun is hot.",
+        "We sit on the grass and rest after the run."
+      ],
+      "setA": [
+        {
+          "question": "What does the dog see by the plant?",
+          "options": [
+            "A frog",
+            "A pen",
+            "A bed"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "How can the dog jump?",
+          "options": [
+            "Fast",
+            "Slowly",
+            "Backwards"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "What does the brother have?",
+          "options": [
+            "A cup of water",
+            "A red hat",
+            "A black sock"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "Why does the brother have a cup of water?",
+          "options": [
+            "Because the sun is hot",
+            "Because the night is dark",
+            "Because the snow is cold"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "level": "Next Level Reading",
+      "title": "Near the Dock",
+      "sentences": [
+        "Why is that small ship near the dock?",
+        "The man and the woman have a box of fish.",
+        "They also have a bag of chips.",
+        "Do not drop the box on the wet path.",
+        "Do not slip on the stones.",
+        "Then they put the fish in the van and drive to town."
+      ],
+      "setA": [
+        {
+          "question": "What do the man and the woman have in a box?",
+          "options": [
+            "Fish",
+            "Milk",
+            "Books"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "Where must they not drop the box?",
+          "options": [
+            "On the wet path",
+            "On the white cloud",
+            "On the green tree"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "What else do they have in a bag?",
+          "options": [
+            "Chips",
+            "Nuts",
+            "Pens"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "Where do they put the fish before driving to town?",
+          "options": [
+            "In the van",
+            "In the cup",
+            "In the hat"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "level": "Next Level Reading",
+      "title": "In the Garden",
+      "sentences": [
+        "She is at her desk.",
+        "She has a book, a pen, and a glass of milk.",
+        "After she finishes her work, she has a wish to play a game.",
+        "She puts her black sock on her foot.",
+        "Then she goes to the garden.",
+        "There is a duck by the pond, and it looks happy."
+      ],
+      "setA": [
+        {
+          "question": "Where is she at the start of the story?",
+          "options": [
+            "At her desk",
+            "By the pond",
+            "In a tent"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What does she put on her foot?",
+          "options": [
+            "Her black sock",
+            "A red hat",
+            "A wet mop"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "When does she have a wish to play a game?",
+          "options": [
+            "After she finishes her work",
+            "Before she wakes up",
+            "During lunch"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "Where is the duck?",
+          "options": [
+            "By the pond",
+            "In the oven",
+            "On the board"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "level": "Next Level Reading",
+      "title": "The Green Tent",
+      "sentences": [
+        "We are on a trip.",
+        "We sleep in a green tent at night.",
+        "He has a map, a flashlight, and a piece of crust in his bag.",
+        "Before we go to sleep, we chat.",
+        "We also listen to music.",
+        "In the morning, we see a flag on the hill and feel great."
+      ],
+      "setA": [
+        {
+          "question": "Where do they sleep at night?",
+          "options": [
+            "In a green tent",
+            "In a big bus",
+            "On a red bed"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What does he have in his bag?",
+          "options": [
+            "A map, a flashlight, and a piece of crust",
+            "A wet mop and a red leg",
+            "A fish and a chip"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "What do they do before going to sleep?",
+          "options": [
+            "Chat and listen to music",
+            "Drive to town and buy milk",
+            "Wash a cup and swim"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What do they see on the hill in the morning?",
+          "options": [
+            "A flag",
+            "A ship",
+            "A crab"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "level": "Next Level Reading",
+      "title": "Fruit and Milk",
+      "sentences": [
+        "Which child has the blend of fruit and milk in the kitchen?",
+        "That little girl has a cup on the table.",
+        "She wants to share.",
+        "The boy is hungry.",
+        "He takes a sip and smiles.",
+        "Then they wash the cup and go out to play."
+      ],
+      "setA": [
+        {
+          "question": "Where is the cup?",
+          "options": [
+            "On the table",
+            "Under the bed",
+            "By the flag"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What is in the cup?",
+          "options": [
+            "A blend of fruit and milk",
+            "Sand and rocks",
+            "Ink and paper"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "Why does the boy take a sip?",
+          "options": [
+            "Because he is hungry",
+            "Because he is sleepy",
+            "Because he is cold"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What do they do after washing the cup?",
+          "options": [
+            "Go out to play",
+            "Go to sleep",
+            "Write a letter"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "level": "Next Level Reading",
+      "title": "At the Bus Stop",
+      "sentences": [
+        "Where is the red bus?",
+        "I am at the stop with my dad.",
+        "We have a map and a bag in our hand.",
+        "A fast van stops in front of us because the bus is late.",
+        "We get into the van and drive home."
+      ],
+      "setA": [
+        {
+          "question": "Who is at the stop with the speaker?",
+          "options": [
+            "Dad",
+            "Mia",
+            "The cat"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What do they have in their hand?",
+          "options": [
+            "A map and a bag",
+            "A black sock and a wet mop",
+            "A frog and a nut"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "Why does a fast van stop in front of them?",
+          "options": [
+            "Because the bus is late",
+            "Because the milk is hot",
+            "Because the sock is wet"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "Where do they go in the van?",
+          "options": [
+            "Home",
+            "To the pond",
+            "To the hill"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "level": "Next Level Reading",
+      "title": "The Thin Rat",
+      "sentences": [
+        "What is on the mat by the bed?",
+        "It is a thin rat.",
+        "The rat has a nut.",
+        "A black cat is near the desk and looks at the rat.",
+        "The rat runs fast to the box because it wants to hide.",
+        "Now the rat is safe inside the dark box."
+      ],
+      "setA": [
+        {
+          "question": "What is on the mat by the bed?",
+          "options": [
+            "A thin rat",
+            "A green tent",
+            "A red bus"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What does the rat have?",
+          "options": [
+            "A nut",
+            "A flag",
+            "A ship"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "Where is the black cat?",
+          "options": [
+            "Near the desk",
+            "In the soup",
+            "On the flag"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "Why does the rat run fast to the box?",
+          "options": [
+            "Because it wants to hide",
+            "Because it wants to swim",
+            "Because it wants to cook"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "level": "Next Level Reading",
+      "title": "The Lock on the Bag",
+      "sentences": [
+        "Why does he have a lock on his bag?",
+        "He has a pen and a pin.",
+        "He also has a fresh bun.",
+        "He sits on a bench.",
+        "Then he opens the lock and eats.",
+        "He drinks milk because he is hungry.",
+        "Then he is ready to chat with his friend."
+      ],
+      "setA": [
+        {
+          "question": "What does he have in his bag?",
+          "options": [
+            "A pen, a pin, and a fresh bun",
+            "A frog, a fish, and a tent",
+            "A bus, a jet, and a red hat"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "Where does he sit?",
+          "options": [
+            "On a bench",
+            "In a cup",
+            "On a bug"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "Why does he drink milk?",
+          "options": [
+            "Because he is hungry",
+            "Because he is asleep",
+            "Because he is late"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "Who is he ready to chat with after eating?",
+          "options": [
+            "His friend",
+            "A crab",
+            "A duck"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "level": "Next Level Reading",
+      "title": "Trip to the Beach",
+      "sentences": [
+        "They are on a trip to the beach.",
+        "She has a wish to see the sea and the sand.",
+        "They walk on the wet path.",
+        "Do not slip on the smooth rocks!",
+        "A small crab is by her foot, so they smile and wave."
+      ],
+      "setA": [
+        {
+          "question": "Where are they on a trip?",
+          "options": [
+            "To the beach",
+            "To the shop",
+            "To the school"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What does she have a wish to see?",
+          "options": [
+            "The sea and the sand",
+            "A hot pot and a lid",
+            "A black sock and a rug"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "Where do they walk?",
+          "options": [
+            "On the wet path",
+            "In a fast van",
+            "On a green tent"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What is by her foot?",
+          "options": [
+            "A small crab",
+            "A small bed",
+            "A small van"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "level": "Next Level Reading",
+      "title": "Milk and Jam",
+      "sentences": [
+        "Which cup has the blend of milk and jam?",
+        "That big cup is on the stand.",
+        "It is for you because you helped clean the room.",
+        "Do not drop the cup when you pick it up.",
+        "You take a sip and smile."
+      ],
+      "setA": [
+        {
+          "question": "Where is the big cup?",
+          "options": [
+            "On the stand",
+            "On the ship",
+            "On the frog"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What is in the big cup?",
+          "options": [
+            "A blend of milk and jam",
+            "Sand and rocks",
+            "Ink and paper"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "Why is the cup for you?",
+          "options": [
+            "Because you helped clean the room",
+            "Because you slept in a tent",
+            "Because you lost a flag"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What do you do after picking it up?",
+          "options": [
+            "Take a sip and smile",
+            "Take a nap and cry",
+            "Take a jump and sink"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "level": "Next Level Reading",
+      "title": "The Hen by the Plant",
+      "sentences": [
+        "Who is in the garden?",
+        "We are by the green plant and the wall.",
+        "A hen is near the plant.",
+        "She has a red leg and looks tired.",
+        "We give her a bit of bread so she can rest."
+      ],
+      "setA": [
+        {
+          "question": "What is near the green plant?",
+          "options": [
+            "A hen",
+            "A fast van",
+            "A black cat"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What color is the hen's leg?",
+          "options": [
+            "Red",
+            "Blue",
+            "Black"
+          ],
+          "correctIndex": 0
+        }
+      ],
+      "setB": [
+        {
+          "question": "How does the hen look?",
+          "options": [
+            "Tired",
+            "Hungry",
+            "Angry"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "question": "What do they give the hen so she can rest?",
+          "options": [
+            "A bit of bread",
+            "A big book",
+            "A blue car"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    }
+  ]
+}

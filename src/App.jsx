@@ -4,6 +4,7 @@ import { EngagementProvider, useEngagement } from './context/EngagementContext';
 import Dashboard from './components/Dashboard';
 import MysteryChestModal from './components/MysteryChestModal';
 import StoryGame from './games/StoryGame';
+import NextLevelReadingGame from './games/NextLevelReadingGame';
 import RemiGame from './games/RemiGame';
 import DirectionPigGame from './games/DirectionPigGame';
 import OddOneOutGame from './games/OddOneOutGame';
@@ -27,6 +28,8 @@ function PhonixShell() {
     switch (activeView.moduleId) {
       case 'story-comprehension':
         return <StoryGame key="story" onExit={exitToDashboard} />;
+      case 'next-level-reading':
+        return <NextLevelReadingGame key="next-level" onExit={exitToDashboard} />;
       case 'cvc-rummikub':
         return <RemiGame key="remi" onExit={exitToDashboard} />;
       case 'direction-pig':
