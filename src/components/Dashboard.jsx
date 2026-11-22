@@ -41,13 +41,13 @@ export const PHONIX_MODULES = [
     id: 'next-level-reading',
     handle: 'next.level.reading',
     title: 'Next Level Reading',
-    subtitle: 'Locked • 12 Advanced Stories',
+    subtitle: 'Locked • 11 Comic Stories',
     icon: '🔒',
-    previewImg: 'story_images/10.jpeg',
+    previewImg: 'next_level_story_images/1.jpeg',
     previewBg: 'linear-gradient(135deg, #F3EFE4 0%, #E7F5EC 100%)',
     likes: 64,
     locked: true,
-    description: '12 longer comprehension stories with Set A & Set B questions. Teacher code required to unlock.'
+    description: '11 comic-book reading stories with Set A & Set B comprehension sets. Code required to unlock.'
   },
   {
     id: 'cvc-rummikub',

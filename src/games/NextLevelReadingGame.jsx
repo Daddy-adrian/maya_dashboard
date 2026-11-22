@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, VolumeX, ArrowRight, ArrowLeft, Check, Lock, Image as ImageIcon } from 'lucide-react';
+import { Volume2, VolumeX, ArrowRight, ArrowLeft, Check, Lock } from 'lucide-react';
 import DynamicIslandHUD from '../components/DynamicIslandHUD';
 import RoundCompleteSheet from '../components/RoundCompleteSheet';
 import { useEngagement } from '../context/EngagementContext';
+import { assetUrl } from '../utils/assets';
 import { SPRING_SNAPPY, TAP_PROPS } from '../utils/motion';
 import { playCorrect, playNearMiss, playTap, playPageTurn, setMusicDucked } from '../utils/sensory';
 import { useGameMusic } from '../utils/useGameMusic';
@@ -37,9 +38,12 @@ function randomizeQuestions(list) {
 function buildOrderedStories() {
   const arr = Array.isArray(rawData?.stories) ? rawData.stories : [];
   return [...arr]
+    .filter((story) => story.id !== 11)
     .sort((a, b) => a.id - b.id)
-    .map((story) => ({
+    .map((story, index) => ({
       ...story,
+      displayNum: index + 1,
+      imagePath: `next_level_story_images/${story.id}.jpeg`,
       setA: randomizeQuestions(story.setA),
       setB: randomizeQuestions(story.setB)
     }));
@@ -86,6 +90,15 @@ export default function NextLevelReadingGame({ onExit }) {
       stopSpeech();
     };
   }, []);
+
+  // Preload next comic image in the background
+  useEffect(() => {
+    const next = stories[currentIdx + 1];
+    if (next?.imagePath) {
+      const img = new Image();
+      img.src = assetUrl(next.imagePath);
+    }
+  }, [stories, currentIdx]);
 
   function stopSpeech() {
     speakingRef.current = false;
@@ -298,8 +311,8 @@ export default function NextLevelReadingGame({ onExit }) {
           <div className="story-card-hig" style={{ textAlign: 'center' }}>Loading stories…</div>
         ) : (
           <>
-            {/* 1-12 Quick Selector Strip */}
-            <div className="story-strip-hig glass-light" aria-label="Next Level Stories 1 to 12">
+            {/* 1-11 Quick Selector Strip */}
+            <div className="story-strip-hig glass-light" aria-label="Next Level Comic Stories">
               {stories.map((s, idx) => {
                 const isCur = idx === currentIdx;
                 const isDone = Boolean(completedIds[s.id]);
@@ -312,7 +325,7 @@ export default function NextLevelReadingGame({ onExit }) {
                     }`}
                     onClick={() => selectStory(idx)}
                   >
-                    {s.id}
+                    {s.displayNum}
                   </button>
                 );
               })}
@@ -348,64 +361,43 @@ export default function NextLevelReadingGame({ onExit }) {
                 exit={{ opacity: 0, x: direction * -42 }}
                 transition={SPRING_SNAPPY}
                 className="story-card-hig"
+                style={{ maxWidth: 820 }}
               >
                 {step === 'story' ? (
                   <>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
                       <div>
                         <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#1E7E45' }}>
-                          Next Level Reading • Story {story.id} of {stories.length}
+                          Next Level Reading • Comic {story.displayNum} of {stories.length}
                         </span>
                         <h2 style={{ marginTop: 2 }}>{story.title}</h2>
                       </div>
                     </div>
 
-                    {/* Media Placeholder for Future Pictures or 5-sec Videos */}
+                    {/* Full Comic Story Image (No writing beneath) */}
                     <div
-                      className="story-img-frame"
                       style={{
-                        flexDirection: 'column',
-                        gap: '0.5rem',
-                        border: '2px dashed rgba(48, 42, 28, 0.16)',
-                        color: 'var(--text-secondary)',
-                        padding: '1.25rem',
-                        textAlign: 'center'
+                        width: '100%',
+                        borderRadius: 18,
+                        background: '#FFFFFF',
+                        border: '1px solid rgba(48, 42, 28, 0.08)',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}
                     >
-                      <ImageIcon size={36} strokeWidth={1.8} color="#8E8E93" />
-                      <div style={{ fontWeight: 700, fontSize: '0.96rem' }}>
-                        Story {story.id}: {story.title}
-                      </div>
-                      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                        Illustration / Video Placeholder
-                      </div>
-                    </div>
-
-                    {/* Story Sentences with Karaoke Read Aloud */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-                      {story.sentences.map((sentence, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          className={`story-sentence-btn ${activeSentence === idx ? 'story-sentence-btn--active' : ''}`}
-                          onClick={() => {
-                            if (!speechSupported) return;
-                            stopSpeech();
-                            setActiveSentence(idx);
-                            setMusicDucked(true);
-                            const u = new SpeechSynthesisUtterance(sentence);
-                            u.lang = 'en-US';
-                            u.rate = 0.88;
-                            u.onend = () => {
-                              setActiveSentence(-1);
-                              setMusicDucked(false);
-                            };
-                            window.speechSynthesis.speak(u);
-                          }}
-                        >
-                          {sentence}
-                        </button>
-                      ))}
+                      <img
+                        src={assetUrl(story.imagePath)}
+                        alt={`Comic story ${story.displayNum}: ${story.title}`}
+                        style={{
+                          width: '100%',
+                          height: 'auto',
+                          maxHeight: '66dvh',
+                          objectFit: 'contain',
+                          display: 'block'
+                        }}
+                      />
                     </div>
                   </>
                 ) : (

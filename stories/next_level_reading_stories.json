@@ -529,58 +529,6 @@
       ]
     },
     {
-      "id": 11,
-      "level": "Next Level Reading",
-      "title": "Milk and Jam",
-      "sentences": [
-        "Which cup has the blend of milk and jam?",
-        "That big cup is on the stand.",
-        "It is for you because you helped clean the room.",
-        "Do not drop the cup when you pick it up.",
-        "You take a sip and smile."
-      ],
-      "setA": [
-        {
-          "question": "Where is the big cup?",
-          "options": [
-            "On the stand",
-            "On the ship",
-            "On the frog"
-          ],
-          "correctIndex": 0
-        },
-        {
-          "question": "What is in the big cup?",
-          "options": [
-            "A blend of milk and jam",
-            "Sand and rocks",
-            "Ink and paper"
-          ],
-          "correctIndex": 0
-        }
-      ],
-      "setB": [
-        {
-          "question": "Why is the cup for you?",
-          "options": [
-            "Because you helped clean the room",
-            "Because you slept in a tent",
-            "Because you lost a flag"
-          ],
-          "correctIndex": 0
-        },
-        {
-          "question": "What do you do after picking it up?",
-          "options": [
-            "Take a sip and smile",
-            "Take a nap and cry",
-            "Take a jump and sink"
-          ],
-          "correctIndex": 0
-        }
-      ]
-    },
-    {
       "id": 12,
       "level": "Next Level Reading",
       "title": "The Hen by the Plant",

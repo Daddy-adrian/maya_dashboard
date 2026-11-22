@@ -4,3 +4,5 @@ dist/
 *.log
 odd_one_out_img/*.png
 public/odd_one_out_img/*.png
+
+/next_level_story_images/
