@@ -227,10 +227,11 @@ export default function RemiGame({ onExit }) {
                   animate={{ scale: 1, opacity: 1 }}
                   transition={SPRING_BOUNCY}
                   style={{
-                    background: '#FFFFFF',
+                    background: 'rgba(255, 255, 255, 0.78)',
+                    backdropFilter: 'blur(20px)',
                     borderRadius: 18,
                     padding: '0.55rem',
-                    border: '2px solid rgba(52, 199, 89, 0.45)',
+                    border: '1px solid rgba(46, 184, 100, 0.35)',
                     boxShadow: 'var(--shadow-ambient)',
                     display: 'flex',
                     flexDirection: 'column',

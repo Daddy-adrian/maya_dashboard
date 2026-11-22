@@ -237,7 +237,7 @@ export default function Dashboard({ onOpenModule }) {
         <section className="quick-play-hero">
           <div>
             <div className="quick-play-hero__eyebrow">
-              <Zap size={14} strokeWidth={2.2} fill="#FFCC00" />
+              <Zap size={14} strokeWidth={2.2} color="#007AFF" />
               Continue Your Streak
             </div>
             <h1>{quickPlayTarget.label}</h1>
