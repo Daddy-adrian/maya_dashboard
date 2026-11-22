@@ -47,6 +47,7 @@ export default function RemiGame({ onExit }) {
 
   const tableRef = useRef(null);
   const idleTimerRef = useRef(null);
+  const didDragRef = useRef(false);
 
   const resetIdle = () => {
     setIdleDeckPulse(false);
@@ -266,14 +267,18 @@ export default function RemiGame({ onExit }) {
             type="button"
             disabled={remainingHand >= HAND_SIZE || deck.length === 0}
             className="btn-tactile btn-surface"
-            animate={idleDeckPulse && remainingHand < HAND_SIZE ? { scale: [1, 1.06, 1] } : { scale: 1 }}
-            transition={idleDeckPulse ? { duration: 1.4, repeat: Infinity } : SPRING_SNAPPY}
+            animate={idleDeckPulse && remainingHand < HAND_SIZE && deck.length > 0 ? { scale: [1, 1.06, 1] } : { scale: 1 }}
+            transition={
+              idleDeckPulse && remainingHand < HAND_SIZE && deck.length > 0
+                ? { duration: 1.4, repeat: Infinity }
+                : SPRING_SNAPPY
+            }
             style={{
               flexDirection: 'column',
               height: '100%',
               minHeight: 140,
               borderRadius: 24,
-              border: idleDeckPulse ? '2px solid var(--apple-blue)' : undefined
+              border: idleDeckPulse && remainingHand < HAND_SIZE ? '2px solid var(--apple-blue)' : undefined
             }}
             onClick={drawCard}
           >
@@ -290,21 +295,40 @@ export default function RemiGame({ onExit }) {
           <span className="tabular-nums" style={{ fontWeight: 700, color: 'var(--text-secondary)' }}>
             Selected: {selected.length} • Hand: {remainingHand}/{HAND_SIZE}
           </span>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <motion.button
               type="button"
               className="btn-pill"
               disabled={selected.length === 0}
-              {...TAP_PROPS}
-              onClick={() => setSelected([])}
+              whileHover={selected.length > 0 ? { scale: 1.02 } : undefined}
+              whileTap={selected.length > 0 ? { scale: 0.94 } : undefined}
+              transition={SPRING_SNAPPY}
+              onClick={() => {
+                playTap();
+                setSelected([]);
+                setBanner(null);
+              }}
             >
-              Clear
+              Clear Selection
+            </motion.button>
+            <motion.button
+              type="button"
+              className="btn-pill"
+              {...TAP_PROPS}
+              onClick={() => {
+                playTap();
+                dealNew();
+              }}
+            >
+              New Hand
             </motion.button>
             <motion.button
               type="button"
               className="btn-tactile btn-blue"
               disabled={selected.length < 3}
-              {...TAP_PROPS}
+              whileHover={selected.length >= 3 ? { scale: 1.02 } : undefined}
+              whileTap={selected.length >= 3 ? { scale: 0.94 } : undefined}
+              transition={SPRING_SNAPPY}
               onClick={() => tryPlaySlots(selected)}
             >
               Place Set on Table
@@ -323,10 +347,14 @@ export default function RemiGame({ onExit }) {
                     drag
                     dragSnapToOrigin
                     onDragStart={() => {
+                      didDragRef.current = true;
                       resetIdle();
                       playCardSwipe();
                     }}
                     onDragEnd={(_, info) => {
+                      setTimeout(() => {
+                        didDragRef.current = false;
+                      }, 60);
                       const rect = tableRef.current?.getBoundingClientRect();
                       if (
                         rect &&
@@ -343,7 +371,10 @@ export default function RemiGame({ onExit }) {
                     whileHover={{ y: -3 }}
                     transition={SPRING_SNAPPY}
                     className={`remi-pic-card ${selected.includes(idx) ? 'remi-pic-card--selected' : ''}`}
-                    onClick={() => toggleSelect(idx)}
+                    onClick={() => {
+                      if (didDragRef.current) return;
+                      toggleSelect(idx);
+                    }}
                     aria-label={card.isJoker ? 'Joker wild card' : card.word}
                     aria-pressed={selected.includes(idx)}
                   >

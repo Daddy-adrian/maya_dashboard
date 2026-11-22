@@ -34,8 +34,12 @@ export default function DynamicIslandHUD({
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.92 }}
             onClick={() => {
-              playTap();
-              onExit();
+              try {
+                playTap();
+              } catch {
+                // Ignore audio errors so Exit always works
+              }
+              if (typeof onExit === 'function') onExit();
             }}
             aria-label="Exit to Dashboard"
           >

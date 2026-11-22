@@ -52,7 +52,7 @@ function PhonixShell() {
 
   return (
     <>
-      <AnimatePresence mode="wait">{renderActiveGame()}</AnimatePresence>
+      <AnimatePresence>{renderActiveGame()}</AnimatePresence>
       <MysteryChestModal />
     </>
   );
