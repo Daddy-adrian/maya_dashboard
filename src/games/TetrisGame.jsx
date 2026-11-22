@@ -20,6 +20,7 @@ const PRONOUN_FILES = [
 
 const PACE_INTERVALS_MS = [Infinity, 5000, 3800, 2900, 2200, 1500, 1300, 1100, 950, 800, 650];
 const ROUND_LENGTH = 15;
+const PASTEL_BLOCKS = ['#FFD4E2', '#CBE8FF', '#C9F2DE', '#FFE8B6', '#DFD1FF', '#FFD8C2'];
 
 function shuffle(arr) {
   const copy = [...arr];
@@ -109,10 +110,12 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
     const s = stateRef.current;
     if (s.spawned >= s.roundCards.length) return;
     const card = s.roundCards[s.spawned];
+    const pastelColor = PASTEL_BLOCKS[s.spawned % PASTEL_BLOCKS.length];
     s.spawned += 1;
     s.active.push({
       uid: `tc-${s.spawned}-${Date.now()}`,
       card,
+      pastelColor,
       lane: Math.floor(Math.random() * buckets.length),
       progressY: 0,
       fast: false,
@@ -324,7 +327,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
   const fieldH = playfieldRef.current?.clientHeight || 420;
 
   return (
-    <div className="focus-shell">
+    <div className="focus-shell focus-shell--pastel-tetris">
       <DynamicIslandHUD
         progress={resolvedCount / ROUND_LENGTH}
         combo={combo}
@@ -339,7 +342,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
             <Gauge size={16} strokeWidth={2.2} />
             Spawn Speed
           </div>
-          <span className="tabular-nums" style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--apple-blue)' }}>
+          <span className="tabular-nums" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#7A63C9' }}>
             {paceLevel}
           </span>
           <input
@@ -352,7 +355,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
               setPaceLevel(Number(e.target.value));
               e.target.blur();
             }}
-            style={{ width: '100%', accentColor: '#007AFF', cursor: 'pointer' }}
+            style={{ width: '100%', accentColor: '#9B84E8', cursor: 'pointer' }}
             aria-label="Spawn speed 0 to 10"
           />
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700 }}>
@@ -374,9 +377,9 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
           </motion.button>
         </aside>
 
-        {/* 16:9 Playfield + Buckets + Controls */}
+        {/* Pastel 3D Tetris Playfield + Buckets + Controls */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
-          <div className="hig-module-card" style={{ padding: '0.75rem', gap: '0.6rem' }}>
+          <div className="tetris-board-frame">
             <div
               ref={playfieldRef}
               className={`tetris-playfield-hig ${isFever ? 'tetris-playfield-hig--fever' : ''}`}
@@ -386,11 +389,26 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
                 <button
                   key={verb}
                   type="button"
-                  className={`tetris-lane-hig ${laneIdx === activeLane ? 'tetris-lane-hig--active' : ''}`}
+                  className={`tetris-lane-hig tetris-lane-hig--${laneIdx} ${
+                    laneIdx === activeLane ? 'tetris-lane-hig--active' : ''
+                  }`}
                   onClick={() => setControlledLane(laneIdx)}
                   aria-label={`Move to ${verb} lane`}
                 />
               ))}
+
+              {/* Stacked Pastel 3D Tetris Bricks showing resolved progress */}
+              {resolvedCount > 0 && (
+                <div className="tetris-pastel-stack" aria-hidden="true">
+                  {Array.from({ length: resolvedCount * 2 }).map((_, i) => (
+                    <span
+                      key={i}
+                      className="tetris-pastel-brick"
+                      style={{ background: PASTEL_BLOCKS[i % PASTEL_BLOCKS.length] }}
+                    />
+                  ))}
+                </div>
+              )}
 
               {activeCards.map((item) => {
                 const isCtrl = controlled?.uid === item.uid;
@@ -403,44 +421,45 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
                     className={`tetris-falling-hig ${isCtrl ? 'tetris-falling-hig--controlled' : ''}`}
                     style={{
                       left: `${leftPct}%`,
-                      transform: `translate(-50%, ${topPx}px)`
+                      transform: `translate(-50%, ${topPx}px)`,
+                      background: item.pastelColor || '#DFD1FF'
                     }}
                   >
-                    <span style={{ fontSize: '0.94rem', fontWeight: 800 }}>{item.card.pronoun}</span>
+                    <span style={{ fontSize: '0.94rem', fontWeight: 800, color: '#362F4B' }}>
+                      {item.card.pronoun}
+                    </span>
                     <img src={item.card.image} alt={item.card.pronoun} />
                   </div>
                 );
               })}
             </div>
 
-            {/* Bottom Buckets */}
+            {/* Pastel 3D Beveled Bottom Buckets */}
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${buckets.length}, 1fr)`, gap: '0.6rem' }}>
               {buckets.map((verb, idx) => (
-                <motion.button
+                <button
                   key={verb}
                   type="button"
-                  animate={pulseBucket === idx ? { scale: [1, 1.05, 1] } : { scale: 1 }}
-                  transition={pulseBucket === idx ? { duration: 0.9, repeat: Infinity } : undefined}
-                  className={`tetris-bucket-hig ${idx === activeLane ? 'tetris-bucket-hig--active' : ''} ${
-                    pulseBucket === idx ? 'tetris-bucket-hig--pulse' : ''
-                  }`}
+                  className={`tetris-bucket-hig tetris-bucket-hig--${idx} ${
+                    idx === activeLane ? 'tetris-bucket-hig--active' : ''
+                  } ${pulseBucket === idx ? 'tetris-bucket-hig--pulse' : ''}`}
                   onClick={() => setControlledLane(idx)}
                 >
                   {verb}
-                </motion.button>
+                </button>
               ))}
             </div>
           </div>
 
-          {/* Thumb-Zone Controls */}
+          {/* Pastel 3D Thumb-Zone Controls */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.65rem' }}>
-            <motion.button type="button" className="btn-tactile btn-surface" {...TAP_PROPS} onClick={() => moveControlled(-1)}>
+            <motion.button type="button" className="btn-tactile tetris-pastel-btn" {...TAP_PROPS} onClick={() => moveControlled(-1)}>
               <ChevronLeft size={20} strokeWidth={2.2} /> Left
             </motion.button>
-            <motion.button type="button" className="btn-tactile btn-blue" {...TAP_PROPS} onClick={triggerDrop}>
+            <motion.button type="button" className="btn-tactile tetris-pastel-btn--drop" {...TAP_PROPS} onClick={triggerDrop}>
               <ArrowDown size={20} strokeWidth={2.2} /> Drop
             </motion.button>
-            <motion.button type="button" className="btn-tactile btn-surface" {...TAP_PROPS} onClick={() => moveControlled(1)}>
+            <motion.button type="button" className="btn-tactile tetris-pastel-btn" {...TAP_PROPS} onClick={() => moveControlled(1)}>
               Right <ChevronRight size={20} strokeWidth={2.2} />
             </motion.button>
           </div>

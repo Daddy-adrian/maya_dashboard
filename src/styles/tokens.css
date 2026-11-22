@@ -1143,7 +1143,17 @@ h1, h2, h3, h4 {
   }
 }
 
-/* Tetris Playfield */
+/* Tetris Playfield — Pastel 3D Beveled-Block Theme */
+.focus-shell--pastel-tetris {
+  background-color: #F4F1FA;
+  background-image:
+    radial-gradient(at 15% 15%, rgba(255, 214, 232, 0.55) 0px, transparent 48%),
+    radial-gradient(at 85% 15%, rgba(196, 234, 255, 0.55) 0px, transparent 48%),
+    radial-gradient(at 80% 88%, rgba(202, 245, 224, 0.52) 0px, transparent 50%),
+    radial-gradient(at 18% 85%, rgba(255, 232, 206, 0.52) 0px, transparent 48%),
+    linear-gradient(180deg, #F7F4FC 0%, #EEF6F8 100%);
+}
+
 .tetris-arena-hig {
   display: grid;
   grid-template-columns: 1fr;
@@ -1155,9 +1165,22 @@ h1, h2, h3, h4 {
 
 @media (min-width: 860px) {
   .tetris-arena-hig {
-    grid-template-columns: 145px 1fr;
+    grid-template-columns: 152px 1fr;
     align-items: start;
   }
+}
+
+.tetris-board-frame {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 26px;
+  padding: 0.8rem;
+  box-shadow: 0 12px 34px rgba(110, 96, 150, 0.1), inset 0 1px 0 #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
 .tetris-playfield-hig {
@@ -1167,32 +1190,77 @@ h1, h2, h3, h4 {
   min-height: 360px;
   max-height: 520px;
   display: grid;
-  gap: 0.6rem;
+  gap: 0.5rem;
   padding: 0.5rem;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.56);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.88);
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.05), var(--shadow-ambient), var(--glass-specular);
+  border-radius: 18px;
+  /* Classic 3D beveled Tetris square grid in soft pastel pearl/lavender */
+  background-color: #E7E3F3;
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(255, 255, 255, 0.52) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(168, 158, 204, 0.22) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(168, 158, 204, 0.28) 25%, #ECE8F6 25%);
+  background-size: 32px 32px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+  border: 2px solid #D8D1EA;
+  box-shadow: inset 0 4px 14px rgba(105, 92, 148, 0.14);
   overflow: hidden;
 }
 
 .tetris-playfield-hig--fever {
-  box-shadow: inset 0 0 0 2px rgba(0, 122, 255, 0.35), 0 10px 28px rgba(0, 122, 255, 0.12);
+  border-color: #F4B9D8;
+  box-shadow: inset 0 0 0 3px rgba(255, 198, 128, 0.75), 0 0 28px rgba(212, 168, 255, 0.45);
 }
 
 .tetris-lane-hig {
-  border-radius: 14px;
-  border: 1.5px dashed rgba(15, 23, 42, 0.07);
-  background: rgba(255, 255, 255, 0.55);
+  border-radius: 12px;
+  border: 2px dashed rgba(130, 118, 170, 0.16);
+  background: rgba(255, 255, 255, 0.24);
   cursor: pointer;
   padding: 0;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.tetris-lane-hig--0 {
+  background: rgba(255, 209, 223, 0.22);
+}
+
+.tetris-lane-hig--1 {
+  background: rgba(201, 232, 255, 0.24);
+}
+
+.tetris-lane-hig--2 {
+  background: rgba(199, 242, 220, 0.24);
 }
 
 .tetris-lane-hig--active {
-  background: rgba(255, 255, 255, 0.88);
-  border-color: rgba(0, 122, 255, 0.38);
+  background: rgba(255, 255, 255, 0.56);
+  border-color: rgba(138, 118, 224, 0.55);
+  box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.65);
+}
+
+/* Stacked Pastel 3D Tetris Bricks at Bottom of Playfield */
+.tetris-pastel-stack {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 6px;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  gap: 3px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.72;
+}
+
+.tetris-pastel-brick {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.7),
+    inset -3px -3px 0 rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(80, 70, 120, 0.16);
 }
 
 .tetris-falling-hig {
@@ -1200,55 +1268,102 @@ h1, h2, h3, h4 {
   top: 6px;
   width: min(192px, 30%);
   height: 196px;
+  padding: 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
+  gap: 0.2rem;
   pointer-events: none;
   border-radius: 14px;
-  border: 2px solid transparent;
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.78),
+    inset -3px -3px 0 rgba(0, 0, 0, 0.1),
+    0 8px 18px rgba(80, 70, 120, 0.18);
+  z-index: 2;
 }
 
 .tetris-falling-hig--controlled {
-  border-color: var(--apple-blue);
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.18);
-  z-index: 2;
+  box-shadow:
+    0 0 0 3px rgba(138, 118, 224, 0.55),
+    inset 3px 3px 0 rgba(255, 255, 255, 0.85),
+    inset -3px -3px 0 rgba(0, 0, 0, 0.12),
+    0 10px 22px rgba(110, 92, 180, 0.26);
+  z-index: 3;
 }
 
 .tetris-falling-hig img {
   width: 100%;
-  height: 174px;
+  height: 158px;
   object-fit: contain;
-  border-radius: 10px;
-  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.1));
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 3px;
 }
 
+/* Pastel 3D Beveled Tetris Bucket Blocks */
 .tetris-bucket-hig {
   min-height: 62px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  color: var(--text-primary);
+  border-radius: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  color: #362F4B;
   font-family: inherit;
-  font-size: 1.35rem;
-  font-weight: 700;
+  font-size: 1.38rem;
+  font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(15, 23, 42, 0.05), var(--glass-specular);
+  box-shadow:
+    inset 4px 4px 0 rgba(255, 255, 255, 0.72),
+    inset -4px -4px 0 rgba(0, 0, 0, 0.1),
+    0 4px 12px rgba(90, 80, 130, 0.12);
+  transition: transform 0.12s ease, box-shadow 0.15s ease;
+}
+
+.tetris-bucket-hig--0 {
+  background: #FFD4E2;
+}
+
+.tetris-bucket-hig--1 {
+  background: #CBE8FF;
+}
+
+.tetris-bucket-hig--2 {
+  background: #C9F2DE;
 }
 
 .tetris-bucket-hig--active {
-  border-color: var(--apple-blue);
-  color: var(--apple-blue);
-  background: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 0 0 3px rgba(138, 118, 224, 0.6),
+    inset 4px 4px 0 rgba(255, 255, 255, 0.85),
+    inset -4px -4px 0 rgba(0, 0, 0, 0.12),
+    0 6px 16px rgba(110, 92, 180, 0.2);
 }
 
 .tetris-bucket-hig--pulse {
-  border-color: var(--apple-green);
-  background: rgba(46, 184, 100, 0.14);
-  color: var(--apple-green-dark);
-  box-shadow: 0 0 0 3px rgba(46, 184, 100, 0.24);
+  background: #B8F0D2 !important;
+  border-color: #46B87A;
+  color: #165B38;
+  box-shadow:
+    0 0 0 4px rgba(70, 184, 122, 0.35),
+    inset 4px 4px 0 rgba(255, 255, 255, 0.8);
+}
+
+.tetris-pastel-btn {
+  background: #EFEAFE;
+  color: #3B3355;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.75),
+    inset -3px -3px 0 rgba(120, 104, 176, 0.14),
+    0 4px 12px rgba(100, 88, 150, 0.1);
+}
+
+.tetris-pastel-btn--drop {
+  background: #D8C7FF;
+  color: #342560;
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 3px 3px 0 rgba(255, 255, 255, 0.75),
+    inset -3px -3px 0 rgba(100, 76, 178, 0.18),
+    0 5px 14px rgba(120, 94, 198, 0.18);
 }
 
 /* ==========================================================================
