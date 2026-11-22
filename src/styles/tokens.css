@@ -811,68 +811,273 @@ h1, h2, h3, h4 {
   gap: 0.75rem;
 }
 
-/* Remi Game */
+/* Remi Game — Classic Rummikub Blue Felt, Wooden Rack & 3D Ivory Tiles */
+.focus-shell--rummikub {
+  background-color: #103570;
+  background-image:
+    radial-gradient(ellipse at 50% 34%, #1F59AD 0%, #143D7F 52%, #0B2552 100%);
+  color: #FFFFFF;
+}
+
+.focus-shell--rummikub .btn-pill {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #FFFFFF;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.focus-shell--rummikub .btn-pill:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.22);
+}
+
 .remi-table-hig {
-  min-height: 220px;
-  border-radius: var(--radius-card);
-  padding: 1rem;
-  border: 1.5px dashed rgba(15, 23, 42, 0.14);
-  background: rgba(255, 255, 255, 0.56);
-  backdrop-filter: blur(24px) saturate(155%);
-  -webkit-backdrop-filter: blur(24px) saturate(155%);
-  box-shadow: var(--shadow-ambient), var(--glass-specular);
+  position: relative;
+  min-height: 240px;
+  border-radius: 26px;
+  padding: 1.25rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  background: radial-gradient(ellipse at 50% 45%, rgba(36, 98, 186, 0.45) 0%, rgba(12, 42, 92, 0.55) 100%);
+  box-shadow: inset 0 6px 24px rgba(4, 18, 44, 0.45);
   display: flex;
   flex-wrap: wrap;
-  gap: 0.85rem;
+  gap: 1.15rem;
   align-items: flex-start;
   justify-content: center;
-}
-
-.remi-table-hig--active {
-  border-color: var(--apple-green);
-  background: rgba(46, 184, 100, 0.08);
-}
-
-.remi-hand-rack-hig {
-  border-radius: var(--radius-card);
-  padding: 0.8rem;
-  overflow-x: auto;
-}
-
-.remi-hand-grid-hig {
-  display: grid;
-  grid-template-columns: repeat(14, minmax(68px, 1fr));
-  gap: 0.45rem;
-  min-width: 1000px;
-}
-
-.remi-pic-card {
-  width: 100%;
-  height: 104px;
-  padding: 0;
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.85);
   overflow: hidden;
+}
+
+.remi-table-watermark {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  font-size: clamp(2.8rem, 7vw, 4.8rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: rgba(8, 28, 66, 0.34);
+  user-select: none;
+}
+
+.remi-table-set {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.remi-table-set__tiles {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(255, 165, 85, 0.18);
+  box-shadow: 0 0 18px rgba(255, 154, 72, 0.65), 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.remi-table-set__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.remi-table-set__rule {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #FFE7B3;
+  background: rgba(8, 22, 50, 0.62);
+  border: 1px solid rgba(255, 220, 150, 0.25);
+  padding: 0.16rem 0.55rem;
+  border-radius: 999px;
+}
+
+/* 3D Ivory Rummikub Cube Tile */
+.rummikub-tile {
+  position: relative;
+  width: 100%;
+  height: 112px;
+  padding: 6px 6px 16px;
+  border-radius: 10px;
+  border: 1px solid #FFFDF7;
+  border-bottom: 5px solid #C2B699;
+  background: linear-gradient(180deg, #FDFBF3 0%, #F1EBDA 68%, #E4DCC5 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -2px 3px rgba(160, 146, 114, 0.3),
+    0 5px 10px rgba(0, 0, 0, 0.34);
   cursor: grab;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
   touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+
+.rummikub-tile--table {
+  width: 72px;
+  height: 98px;
+  padding: 5px 5px 14px;
+  cursor: default;
+}
+
+.rummikub-tile--selected {
+  transform: translateY(-7px);
+  border-color: #FFD54F;
+  border-bottom-color: #D9A404;
+  box-shadow:
+    0 0 0 2.5px #FFD54F,
+    0 0 20px rgba(255, 213, 79, 0.75),
+    0 12px 20px rgba(0, 0, 0, 0.42);
+}
+
+.rummikub-tile__dish {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: radial-gradient(circle at 50% 45%, #FFFFFF 0%, #EFE8D5 100%);
+  box-shadow: inset 0 2px 5px rgba(120, 105, 75, 0.2);
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 2px;
 }
 
-.remi-pic-card--selected {
-  border-color: var(--apple-blue);
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.24), 0 8px 18px rgba(15, 23, 42, 0.1);
-}
-
-.remi-pic-card img {
+.rummikub-tile__dish img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 6px;
   display: block;
   pointer-events: none;
+}
+
+.rummikub-tile__stamp {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(130, 118, 92, 0.65);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* 2-Tier Honey-Oak Wooden Rummikub Rack */
+.rummikub-wood-rack {
+  position: relative;
+  border-radius: 14px 14px 10px 10px;
+  padding: 0.75rem 0.9rem 0.85rem;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(120, 72, 28, 0.05) 0px,
+      rgba(120, 72, 28, 0.05) 2px,
+      transparent 2px,
+      transparent 14px
+    ),
+    linear-gradient(180deg, #E5BC8B 0%, #D39E68 22%, #C38A52 55%, #B07740 100%);
+  border: 1.5px solid #F0CFA3;
+  border-bottom: 8px solid #8D5B2B;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 240, 214, 0.65),
+    inset 0 -3px 8px rgba(85, 48, 16, 0.4),
+    0 18px 36px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.rummikub-wood-shelf {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0.4rem 0.45rem 0.65rem;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(84, 48, 18, 0.32) 0%, rgba(120, 74, 30, 0.14) 70%, rgba(255, 232, 198, 0.25) 100%);
+  border-bottom: 5px solid #A46D38;
+  box-shadow: inset 0 4px 8px rgba(64, 34, 10, 0.35), 0 3px 0 rgba(255, 235, 200, 0.25);
+}
+
+.rummikub-empty-slot {
+  width: 100%;
+  height: 112px;
+  border-radius: 9px;
+  border: 1.5px dashed rgba(90, 50, 18, 0.32);
+  background: rgba(84, 46, 16, 0.14);
+  display: grid;
+  place-items: center;
+  color: rgba(255, 238, 210, 0.55);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.rummikub-wood-brand {
+  align-self: flex-end;
+  margin-top: -0.25rem;
+  padding-right: 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: rgba(96, 54, 18, 0.58);
+  text-shadow: 0 1px 0 rgba(255, 232, 198, 0.45);
+  user-select: none;
+}
+
+.rummikub-draw-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 150px;
+  padding: 0.9rem 0.7rem;
+  border-radius: 16px;
+  border: 2px solid #FFFDF7;
+  border-bottom: 9px solid #BCAE8E;
+  background: linear-gradient(180deg, #FDFBF3 0%, #EFE9D7 70%, #DFD6BE 100%);
+  color: #1D1D1F;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.96rem;
+  cursor: pointer;
+  box-shadow:
+    inset 0 2px 0 #FFFFFF,
+    0 10px 22px rgba(0, 0, 0, 0.38);
+  transition: transform 0.12s ease, opacity 0.15s ease;
+}
+
+.rummikub-draw-stack:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.rummikub-draw-stack:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+  .rummikub-wood-shelf {
+    gap: 0.3rem;
+    padding: 0.3rem 0.25rem 0.45rem;
+  }
+  .rummikub-tile,
+  .rummikub-empty-slot {
+    height: 82px;
+  }
+  .rummikub-tile {
+    padding: 4px 4px 12px;
+  }
 }
 
 /* Tetris Playfield */
