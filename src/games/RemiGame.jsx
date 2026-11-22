@@ -310,7 +310,7 @@ export default function RemiGame({ onExit }) {
             )}
           </div>
 
-          {/* 3D Ivory Tile Draw Stack */}
+          {/* Carved Wooden Draw Tile Button */}
           <button
             type="button"
             disabled={remainingHand >= HAND_SIZE || deck.length === 0}
@@ -320,9 +320,9 @@ export default function RemiGame({ onExit }) {
             }}
             onClick={drawCard}
           >
-            <Layers size={28} strokeWidth={2.2} color="#143D7F" />
+            <Layers size={28} strokeWidth={2.2} color="#FFF8EE" />
             <span>Draw Tile</span>
-            <span className="tabular-nums" style={{ fontSize: '0.8rem', color: '#63636A' }}>
+            <span className="tabular-nums" style={{ fontSize: '0.8rem', color: 'rgba(255, 248, 238, 0.85)' }}>
               {deck.length} left
             </span>
           </button>
