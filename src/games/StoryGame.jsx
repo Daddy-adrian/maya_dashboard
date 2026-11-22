@@ -181,10 +181,7 @@ export default function StoryGame({ onExit }) {
   const stepProgress = step === 'story' ? 0.25 : step === 'setA' ? 0.65 : quiz.setB.solved ? 1 : 0.85;
 
   return (
-    <motion.div
-      layoutId="module-card-story-comprehension"
-      className="focus-shell"
-    >
+    <div className="focus-shell">
       <DynamicIslandHUD
         progress={stepProgress}
         combo={combo}
@@ -412,6 +409,6 @@ export default function StoryGame({ onExit }) {
           />
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

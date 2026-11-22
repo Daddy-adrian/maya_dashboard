@@ -125,17 +125,15 @@ export default function Dashboard({ onOpenModule }) {
         <div className="dash-topbar__inner">
           <div className="dash-brand">
             <span className="dash-wordmark">PHONIX</span>
-            <motion.div
+            <div
               className="status-chip tabular-nums"
               title={`Streak Freeze Shields: ${engagement.streakFreezes}`}
-              animate={{ scale: [1, 1.04, 1] }}
-              transition={{ duration: 2.6, repeat: Infinity }}
               style={{ color: '#D95B00' }}
             >
               <Flame size={17} strokeWidth={2.2} fill="#FF9500" color="#FF9500" />
               <span>{engagement.streakDays}</span>
               <Shield size={14} strokeWidth={2.2} color="#007AFF" />
-            </motion.div>
+            </div>
           </div>
 
           <div className="dash-status-pills">
@@ -236,12 +234,7 @@ export default function Dashboard({ onOpenModule }) {
         </section>
 
         {/* Zero-Decision Quick Play Hero Card */}
-        <motion.section
-          className="quick-play-hero"
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={SPRING_SNAPPY}
-        >
+        <section className="quick-play-hero">
           <div>
             <div className="quick-play-hero__eyebrow">
               <Zap size={14} strokeWidth={2.2} fill="#FFCC00" />
@@ -254,10 +247,7 @@ export default function Dashboard({ onOpenModule }) {
             type="button"
             className="btn-tactile btn-green"
             style={{ fontSize: '1.08rem', padding: '0.8rem 1.65rem' }}
-            animate={{ scale: [1, 1.03, 1] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.94 }}
+            {...TAP_PROPS}
             onClick={() => {
               playTap();
               onOpenModule(quickPlayTarget.moduleId, quickPlayTarget.mode);
@@ -266,19 +256,16 @@ export default function Dashboard({ onOpenModule }) {
             <Play size={18} strokeWidth={2.2} fill="#FFFFFF" />
             Quick Play
           </motion.button>
-        </motion.section>
+        </section>
 
         {/* 6 App Store Module Cards */}
         <section className="app-modules-grid" aria-label="PHONIX Learning Modules">
           {PHONIX_MODULES.map((mod) => {
             const charge = getModuleCharge(engagement.lastPlayedByModule[mod.id]);
             return (
-              <motion.article
+              <article
                 key={mod.id}
-                layoutId={`module-card-${mod.id}`}
                 className="hig-module-card"
-                whileHover={{ y: -3 }}
-                transition={SPRING_SNAPPY}
               >
                 <div className="hig-module-card__top">
                   <div className="hig-module-icon" aria-hidden="true">
@@ -352,7 +339,7 @@ export default function Dashboard({ onOpenModule }) {
                     </motion.button>
                   )}
                 </div>
-              </motion.article>
+              </article>
             );
           })}
         </section>

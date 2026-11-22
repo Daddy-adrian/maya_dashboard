@@ -184,7 +184,7 @@ export default function RemiGame({ onExit }) {
   const progress = (HAND_SIZE - remainingHand) / HAND_SIZE;
 
   return (
-    <motion.div layoutId="module-card-cvc-rummikub" className="focus-shell">
+    <div className="focus-shell">
       <DynamicIslandHUD progress={progress} combo={combo} statusBanner={banner} onExit={onExit} />
 
       <div className="game-stage-container" style={{ maxWidth: 1100 }}>
@@ -262,17 +262,11 @@ export default function RemiGame({ onExit }) {
             )}
           </div>
 
-          {/* Draw Deck with 8s Idle Nudge */}
-          <motion.button
+          {/* Draw Deck */}
+          <button
             type="button"
             disabled={remainingHand >= HAND_SIZE || deck.length === 0}
             className="btn-tactile btn-surface"
-            animate={idleDeckPulse && remainingHand < HAND_SIZE && deck.length > 0 ? { scale: [1, 1.06, 1] } : { scale: 1 }}
-            transition={
-              idleDeckPulse && remainingHand < HAND_SIZE && deck.length > 0
-                ? { duration: 1.4, repeat: Infinity }
-                : SPRING_SNAPPY
-            }
             style={{
               flexDirection: 'column',
               height: '100%',
@@ -287,7 +281,7 @@ export default function RemiGame({ onExit }) {
             <span className="tabular-nums" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               {deck.length} left
             </span>
-          </motion.button>
+          </button>
         </div>
 
         {/* Action Strip */}
@@ -415,6 +409,6 @@ export default function RemiGame({ onExit }) {
           />
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

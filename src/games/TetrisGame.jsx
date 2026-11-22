@@ -324,10 +324,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
   const fieldH = playfieldRef.current?.clientHeight || 420;
 
   return (
-    <motion.div
-      layoutId={`module-card-${isAmIsAre ? 'am-is-are' : 'have-has-tetris'}`}
-      className="focus-shell"
-    >
+    <div className="focus-shell">
       <DynamicIslandHUD
         progress={resolvedCount / ROUND_LENGTH}
         combo={combo}
@@ -462,6 +459,6 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
           />
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

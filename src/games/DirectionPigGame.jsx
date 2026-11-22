@@ -184,7 +184,7 @@ export default function DirectionPigGame({ onExit }) {
   const progress = queue.length > 0 ? idx / queue.length : 0;
 
   return (
-    <motion.div layoutId="module-card-direction-pig" className="focus-shell">
+    <div className="focus-shell">
       <DynamicIslandHUD progress={progress} combo={combo} statusBanner={banner} onExit={onExit} />
 
       <div className="game-stage-container" style={{ justifyContent: 'center' }}>
@@ -297,6 +297,6 @@ export default function DirectionPigGame({ onExit }) {
           />
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

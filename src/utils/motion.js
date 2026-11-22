@@ -24,7 +24,6 @@ export const SPRING_SHEET = {
 };
 
 export const TAP_PROPS = {
-  whileHover: { scale: 1.02 },
-  whileTap: { scale: 0.94 },
-  transition: SPRING_SNAPPY
+  whileTap: { scale: 0.97 },
+  transition: { duration: 0.1 }
 };

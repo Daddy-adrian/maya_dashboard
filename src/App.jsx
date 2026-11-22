@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MotionConfig, AnimatePresence } from 'framer-motion';
+import { MotionConfig } from 'framer-motion';
 import { EngagementProvider, useEngagement } from './context/EngagementContext';
 import Dashboard from './components/Dashboard';
 import MysteryChestModal from './components/MysteryChestModal';
@@ -52,7 +52,7 @@ function PhonixShell() {
 
   return (
     <>
-      <AnimatePresence>{renderActiveGame()}</AnimatePresence>
+      {renderActiveGame()}
       <MysteryChestModal />
     </>
   );

@@ -158,7 +158,7 @@ export default function OddOneOutGame({ onExit }) {
   }
 
   return (
-    <motion.div layoutId="module-card-odd-one-out" className="focus-shell">
+    <div className="focus-shell">
       <DynamicIslandHUD
         progress={done ? 1 : (roundNum - 1) / TOTAL_ROUNDS}
         combo={combo}
@@ -422,6 +422,6 @@ export default function OddOneOutGame({ onExit }) {
           />
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

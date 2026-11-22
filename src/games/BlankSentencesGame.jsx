@@ -155,10 +155,7 @@ export default function BlankSentencesGame({ mode = 'am_is_are', onExit }) {
   }
 
   return (
-    <motion.div
-      layoutId={`module-card-${isAmIsAre ? 'am-is-are' : 'have-has-tetris'}`}
-      className="focus-shell"
-    >
+    <div className="focus-shell">
       <DynamicIslandHUD
         progress={questions.length > 0 ? idx / questions.length : 0}
         combo={combo}
@@ -273,6 +270,6 @@ export default function BlankSentencesGame({ mode = 'am_is_are', onExit }) {
           />
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
