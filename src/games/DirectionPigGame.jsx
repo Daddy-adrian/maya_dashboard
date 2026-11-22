@@ -6,7 +6,8 @@ import RoundCompleteSheet from '../components/RoundCompleteSheet';
 import { useEngagement, loadDirectionPigSrs } from '../context/EngagementContext';
 import { assetUrl } from '../utils/assets';
 import { SPRING_SNAPPY, TAP_PROPS } from '../utils/motion';
-import { playCorrect, playNearMiss, playTap } from '../utils/sensory';
+import { playCorrect, playNearMiss, playPigPop, playTap } from '../utils/sensory';
+import { useGameMusic } from '../utils/useGameMusic';
 
 const SRS_KEY = 'phonix_direction_pig_srs_v1';
 
@@ -44,6 +45,7 @@ function buildQ(target, mode, isBonusRecall = false) {
 }
 
 export default function DirectionPigGame({ onExit }) {
+  useGameMusic('pig');
   const { awardXP, incrementQuest, maybeTriggerMysteryChest, announce } = useEngagement();
   const [queue, setQueue] = useState([]);
   const [idx, setIdx] = useState(0);
@@ -131,6 +133,7 @@ export default function DirectionPigGame({ onExit }) {
       setSolved(true);
       const nextCombo = combo + 1;
       setCombo(nextCombo);
+      playPigPop();
       playCorrect(nextCombo);
       incrementQuest('q-pig', 1);
 

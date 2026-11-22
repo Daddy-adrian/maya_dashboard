@@ -6,7 +6,8 @@ import RoundCompleteSheet from '../components/RoundCompleteSheet';
 import { useEngagement } from '../context/EngagementContext';
 import { assetUrl } from '../utils/assets';
 import { SPRING_SNAPPY, TAP_PROPS } from '../utils/motion';
-import { playCardSwipe, playCorrect, playJackpot, playNearMiss, playTap } from '../utils/sensory';
+import { playCardSwipe, playNearMiss, playSlotFail, playSlotLever, playSlotTick, playSlotWin, playTap } from '../utils/sensory';
+import { useGameMusic } from '../utils/useGameMusic';
 
 const TOTAL_ROUNDS = 10;
 
@@ -30,6 +31,7 @@ function pickDistractor(targets, pool) {
 }
 
 export default function OddOneOutGame({ onExit }) {
+  useGameMusic('casino');
   const { awardXP, incrementQuest, maybeTriggerMysteryChest } = useEngagement();
   const [items, setItems] = useState([]);
   const [modeSetting, setModeSetting] = useState('mixed'); // 'mixed' | 'words-to-pictures' | 'pictures-to-words'
@@ -181,7 +183,7 @@ export default function OddOneOutGame({ onExit }) {
     setReelResults([null, null, null]);
     setBanner(null);
     setSpinningReels([true, true, true]);
-    playCardSwipe();
+    playSlotLever();
 
     // Spring the handle back up after 320ms
     timersRef.current.push(
@@ -207,7 +209,7 @@ export default function OddOneOutGame({ onExit }) {
 
       const stopTimer = setTimeout(() => {
         clearInterval(iv);
-        playTap();
+        playSlotTick(reelIdx);
         setReelDisplay((prev) => {
           const next = [...prev];
           next[reelIdx] = target;
@@ -235,7 +237,7 @@ export default function OddOneOutGame({ onExit }) {
       if (allCorrect) {
         const nextCombo = combo + 1;
         setCombo(nextCombo);
-        playJackpot();
+        playSlotWin();
         const pts = round.mistake ? 5 : 10;
         setScore((s) => s + pts);
         awardXP(pts + 8, 4);
@@ -267,7 +269,7 @@ export default function OddOneOutGame({ onExit }) {
         );
       } else {
         setCombo(0);
-        playNearMiss();
+        playSlotFail();
         setRound((prev) => (prev ? { ...prev, mistake: true } : prev));
         setBanner({
           type: 'coach',

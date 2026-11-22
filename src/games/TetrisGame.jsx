@@ -6,7 +6,8 @@ import RoundCompleteSheet from '../components/RoundCompleteSheet';
 import { useEngagement } from '../context/EngagementContext';
 import { assetUrl } from '../utils/assets';
 import { TAP_PROPS } from '../utils/motion';
-import { playCorrect, playNearMiss, playTap } from '../utils/sensory';
+import { playNearMiss, playTap, playTetrisClear, playTetrisDrop, playTetrisMove } from '../utils/sensory';
+import { useGameMusic } from '../utils/useGameMusic';
 
 const PRONOUN_FILES = [
   'i.jpeg',
@@ -35,6 +36,7 @@ function shuffle(arr) {
  * Unified Parameterized Tetris Engine for both Am / Is / Are (3-lane) and Have / Has (2-lane).
  */
 export default function TetrisGame({ mode = 'am_is_are', onExit }) {
+  useGameMusic('tetris');
   const isAmIsAre = mode === 'am_is_are';
   const buckets = isAmIsAre ? ['am', 'is', 'are'] : ['have', 'has'];
   const grammarRule = isAmIsAre
@@ -154,7 +156,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
       setBanner({ type: 'fire', text: `${item.card.pronoun} ${item.card.verb}!` });
     }
 
-    playCorrect(Math.max(1, s.combo));
+    playTetrisClear(Math.max(1, s.combo));
     incrementQuest('q-tetris', 1);
 
     if (s.resolved >= s.roundCards.length && s.active.length === 0) {
@@ -200,7 +202,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
     if (!ctrl || (s.phase !== 'playing' && s.phase !== 'retry')) return;
     const next = Math.max(0, Math.min(buckets.length - 1, ctrl.lane + delta));
     if (next !== ctrl.lane) {
-      playTap();
+      playTetrisMove();
       ctrl.lane = next;
       setActiveCards([...s.active]);
       if (s.phase === 'retry' && ctrl.lane === ctrl.card.bucketIndex) {
@@ -214,10 +216,11 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
     const ctrl = getControlled();
     if (!ctrl || (s.phase !== 'playing' && s.phase !== 'retry')) return;
     if (s.phase === 'playing' && ctrl.lane === laneIdx) {
+      playTetrisDrop();
       ctrl.fast = true;
       return;
     }
-    playTap();
+    playTetrisMove();
     ctrl.lane = laneIdx;
     setActiveCards([...s.active]);
     if (s.phase === 'retry' && ctrl.lane === ctrl.card.bucketIndex) {
@@ -234,6 +237,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
       return;
     }
     if (s.phase === 'playing') {
+      playTetrisDrop();
       ctrl.fast = true;
     }
   }

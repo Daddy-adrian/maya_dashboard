@@ -6,11 +6,13 @@ import RoundCompleteSheet from '../components/RoundCompleteSheet';
 import { useEngagement } from '../context/EngagementContext';
 import { assetUrl } from '../utils/assets';
 import { SPRING_SNAPPY, SPRING_BOUNCY, TAP_PROPS } from '../utils/motion';
-import { playCorrect, playNearMiss, playTap, playCardSwipe } from '../utils/sensory';
+import { playCorrect, playNearMiss, playTap, playPageTurn, setMusicDucked } from '../utils/sensory';
+import { useGameMusic } from '../utils/useGameMusic';
 
 const LETTERS = ['A', 'B', 'C'];
 
 export default function StoryGame({ onExit }) {
+  useGameMusic('story');
   const { storyProgress, saveStoryDone, awardXP, incrementQuest, maybeTriggerMysteryChest, announce } = useEngagement();
   const [stories, setStories] = useState([]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -72,6 +74,7 @@ export default function StoryGame({ onExit }) {
     speakingRef.current = false;
     setIsSpeaking(false);
     setActiveSentence(-1);
+    setMusicDucked(false);
     if (speechSupported) {
       window.speechSynthesis.cancel();
     }
@@ -80,7 +83,7 @@ export default function StoryGame({ onExit }) {
   function selectStory(idx) {
     if (idx < 0 || idx >= stories.length) return;
     stopSpeech();
-    playCardSwipe();
+    playPageTurn();
     setDirection(idx >= currentIdx ? 1 : -1);
     setCurrentIdx(idx);
     setStep('story');
@@ -94,7 +97,7 @@ export default function StoryGame({ onExit }) {
 
   function goToStep(nextStep) {
     stopSpeech();
-    playCardSwipe();
+    playPageTurn();
     const order = { story: 0, setA: 1, setB: 2 };
     setDirection(order[nextStep] >= order[step] ? 1 : -1);
     setStep(nextStep);
@@ -110,6 +113,7 @@ export default function StoryGame({ onExit }) {
     window.speechSynthesis.cancel();
     speakingRef.current = true;
     setIsSpeaking(true);
+    setMusicDucked(true);
 
     let idx = 0;
     const speakNext = () => {

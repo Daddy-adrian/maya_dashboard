@@ -5,6 +5,7 @@ import RoundCompleteSheet from '../components/RoundCompleteSheet';
 import { useEngagement } from '../context/EngagementContext';
 import { SPRING_SNAPPY, TAP_PROPS } from '../utils/motion';
 import { playCorrect, playNearMiss, playTap } from '../utils/sensory';
+import { useGameMusic } from '../utils/useGameMusic';
 
 const AM_IS_ARE_LEVELS = {
   pronouns: [
@@ -72,6 +73,7 @@ function shuffle(arr) {
 }
 
 export default function BlankSentencesGame({ mode = 'am_is_are', onExit }) {
+  useGameMusic('sentences');
   const isAmIsAre = mode === 'am_is_are';
   const options = isAmIsAre ? ['am', 'is', 'are'] : ['have', 'has'];
   const levels = isAmIsAre ? AM_IS_ARE_LEVELS : HAVE_HAS_LEVELS;

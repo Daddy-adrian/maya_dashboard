@@ -6,7 +6,8 @@ import RoundCompleteSheet from '../components/RoundCompleteSheet';
 import { useEngagement } from '../context/EngagementContext';
 import { assetUrl } from '../utils/assets';
 import { SPRING_SNAPPY, SPRING_BOUNCY, TAP_PROPS } from '../utils/motion';
-import { playCardSwipe, playCorrect, playNearMiss, playTap } from '../utils/sensory';
+import { playWoodClack, playTileSlide, playCorrect, playNearMiss, playTap } from '../utils/sensory';
+import { useGameMusic } from '../utils/useGameMusic';
 
 const HAND_SIZE = 14;
 
@@ -33,6 +34,7 @@ function validateRemiSet(cards) {
 }
 
 export default function RemiGame({ onExit }) {
+  useGameMusic('remi');
   const { awardXP, maybeTriggerMysteryChest, announce } = useEngagement();
   const [masterDeck, setMasterDeck] = useState([]);
   const [deck, setDeck] = useState([]);
@@ -98,7 +100,7 @@ export default function RemiGame({ onExit }) {
 
   function toggleSelect(slotIdx) {
     resetIdle();
-    playTap();
+    playWoodClack();
     setSelected((prev) =>
       prev.includes(slotIdx) ? prev.filter((i) => i !== slotIdx) : [...prev, slotIdx]
     );
@@ -108,7 +110,7 @@ export default function RemiGame({ onExit }) {
     resetIdle();
     const emptyIdx = hand.findIndex((c) => c === null);
     if (emptyIdx === -1 || deck.length === 0) return;
-    playCardSwipe();
+    playTileSlide();
     const nextDeck = [...deck];
     const drawn = nextDeck.pop();
     const nextHand = [...hand];
@@ -198,7 +200,7 @@ export default function RemiGame({ onExit }) {
             onDragStart={() => {
               didDragRef.current = true;
               resetIdle();
-              playCardSwipe();
+              playWoodClack();
             }}
             onDragEnd={(_, info) => {
               setTimeout(() => {

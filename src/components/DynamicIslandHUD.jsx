@@ -1,10 +1,11 @@
 import React from 'react';
-import { ChevronLeft, Flame, Sparkles, AlertCircle } from 'lucide-react';
+import { ChevronLeft, Flame, Sparkles, AlertCircle, Volume2, VolumeX } from 'lucide-react';
+import { useEngagement } from '../context/EngagementContext';
 import { playTap } from '../utils/sensory';
 
 /**
  * Floating Cream Progress HUD for full-bleed Focus Mode games.
- * Minimal, glitch-free transitions.
+ * Includes instant Exit, progress bar, combo badge, and in-game Sound/Music mute toggle.
  */
 export default function DynamicIslandHUD({
   progress = 0, // 0..1
@@ -12,6 +13,7 @@ export default function DynamicIslandHUD({
   statusBanner = null, // { type: 'fire' | 'coach' | 'bonus', text: string } | null
   onExit
 }) {
+  const { engagement, toggleMute } = useEngagement();
   const pct = Math.max(0, Math.min(100, Math.round(progress * 100)));
   const isFire = statusBanner?.type === 'fire' || combo >= 3;
   const isCoach = statusBanner?.type === 'coach';
@@ -61,6 +63,21 @@ export default function DynamicIslandHUD({
             <Flame size={16} strokeWidth={2.2} />
             <span>x{combo}</span>
           </div>
+
+          <button
+            type="button"
+            className="dynamic-island__exit"
+            style={{ padding: '0.32rem 0.45rem' }}
+            onClick={toggleMute}
+            aria-label={engagement.soundMuted ? 'Unmute music and sounds' : 'Mute music and sounds'}
+            title={engagement.soundMuted ? 'Unmute' : 'Mute'}
+          >
+            {engagement.soundMuted ? (
+              <VolumeX size={15} strokeWidth={2.2} />
+            ) : (
+              <Volume2 size={15} strokeWidth={2.2} />
+            )}
+          </button>
         </div>
 
         {statusBanner && (
