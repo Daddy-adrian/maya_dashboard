@@ -54,6 +54,7 @@ export default function OddOneOutGame({ onExit }) {
   const timersRef = useRef([]);
   const intervalsRef = useRef([]);
   const didDragRef = useRef(false);
+  const bagRef = useRef([]);
 
   const clearAllTimers = () => {
     timersRef.current.forEach((id) => clearTimeout(id));
@@ -81,11 +82,14 @@ export default function OddOneOutGame({ onExit }) {
 
   function createRound(pool, nextRoundNum, setting) {
     clearAllTimers();
-    const targets = shuffle(pool).slice(0, 3);
+    if (bagRef.current.length < 3) {
+      bagRef.current = shuffle(pool);
+    }
+    const targets = bagRef.current.splice(0, 3);
     const distractor = pickDistractor(targets, pool);
     const mode =
       setting === 'mixed'
-        ? nextRoundNum % 2 === 1
+        ? Math.random() < 0.5
           ? 'words-to-pictures'
           : 'pictures-to-words'
         : setting;

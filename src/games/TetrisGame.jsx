@@ -101,6 +101,17 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
       const iCard = mapped.find((c) => c.verb === 'am');
       if (iCard) picked[Math.floor(Math.random() * picked.length)] = iCard;
     }
+    // Avoid back-to-back identical pronouns where possible
+    for (let i = 1; i < picked.length; i += 1) {
+      if (picked[i].pronoun === picked[i - 1].pronoun) {
+        const swapIdx = picked.findIndex(
+          (c, j) => j > i && c.pronoun !== picked[i - 1].pronoun
+        );
+        if (swapIdx !== -1) {
+          [picked[i], picked[swapIdx]] = [picked[swapIdx], picked[i]];
+        }
+      }
+    }
     picked.forEach((c) => {
       const pre = new Image();
       pre.src = c.image;

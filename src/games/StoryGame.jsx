@@ -11,6 +11,32 @@ import { useGameMusic } from '../utils/useGameMusic';
 
 const LETTERS = ['A', 'B', 'C'];
 
+function shuffle(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function randomizeStoryChoices(story) {
+  if (!story || !Array.isArray(story.questions)) return story;
+  return {
+    ...story,
+    questions: story.questions.map((q) => {
+      if (!Array.isArray(q.options)) return q;
+      const indexed = q.options.map((text, i) => ({ text, isCorrect: i === q.correctIndex }));
+      const mixed = shuffle(indexed);
+      return {
+        ...q,
+        options: mixed.map((m) => m.text),
+        correctIndex: mixed.findIndex((m) => m.isCorrect)
+      };
+    })
+  };
+}
+
 export default function StoryGame({ onExit }) {
   useGameMusic('story');
   const { storyProgress, saveStoryDone, awardXP, incrementQuest, maybeTriggerMysteryChest, announce } = useEngagement();
@@ -43,10 +69,9 @@ export default function StoryGame({ onExit }) {
           if (!res.ok) continue;
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0 && active) {
-            const sorted = data.sort((a, b) => a.id - b.id);
-            setStories(sorted);
-            const lastIdx = sorted.findIndex((s) => s.id === (storyProgress.lastStoryId || 1));
-            setCurrentIdx(lastIdx >= 0 ? lastIdx : 0);
+            const randomized = shuffle(data).map(randomizeStoryChoices);
+            setStories(randomized);
+            setCurrentIdx(0);
             return;
           }
         } catch {

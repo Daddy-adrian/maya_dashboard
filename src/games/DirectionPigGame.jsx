@@ -66,15 +66,9 @@ export default function DirectionPigGame({ onExit }) {
   function startSession() {
     if (timerRef.current) clearTimeout(timerRef.current);
     recallsRef.current = {};
-    const srs = loadDirectionPigSrs();
-    const ordered = shuffle(DIRECTION_ITEMS).sort((a, b) => {
-      const sa = srs[a.id]?.streak ?? 0;
-      const sb = srs[b.id]?.streak ?? 0;
-      if (sa !== sb) return sa - sb;
-      return (srs[b.id]?.lapses ?? 0) - (srs[a.id]?.lapses ?? 0);
-    });
-    const initial = ordered.map((t, i) =>
-      buildQ(t, i % 2 === 0 ? 'picture-to-word' : 'word-to-picture', false)
+    const ordered = shuffle(DIRECTION_ITEMS);
+    const initial = ordered.map((t) =>
+      buildQ(t, Math.random() < 0.5 ? 'picture-to-word' : 'word-to-picture', false)
     );
     setQueue(initial);
     setIdx(0);

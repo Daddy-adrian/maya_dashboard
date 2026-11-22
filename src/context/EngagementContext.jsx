@@ -31,74 +31,39 @@ function createDefaultQuests() {
   ];
 }
 
-function loadEngagement() {
-  const today = getTodayStr();
-  const defaults = {
-    xp: 15, // Endowed Progress: 15% pre-filled daily goal
-    coins: 25,
+function createFreshEngagement() {
+  return {
+    xp: 0,
+    coins: 0,
     streakDays: 1,
     streakFreezes: 1,
-    lastPlayedDate: today,
-    dailyXp: 15,
+    lastPlayedDate: getTodayStr(),
+    dailyXp: 0,
     dailyQuests: createDefaultQuests(),
     unlockedStickers: ['star-cat'],
     placedStickers: [{ id: 'star-cat', x: 60, y: 60 }],
     soundMuted: false,
     lastPlayedByModule: {}
   };
+}
 
+function clearPersistedProgress() {
   try {
-    const raw = localStorage.getItem(ENGAGEMENT_KEY);
-    if (!raw) return defaults;
-    const parsed = JSON.parse(raw);
-    const isNewDay = parsed.lastPlayedDate && parsed.lastPlayedDate !== today;
-
-    let streakDays = parsed.streakDays || 1;
-    let streakFreezes = parsed.streakFreezes ?? 1;
-    if (isNewDay) {
-      const prev = new Date(parsed.lastPlayedDate);
-      const curr = new Date(today);
-      const diffDays = Math.round((curr - prev) / (1000 * 60 * 60 * 24));
-      if (diffDays === 1) {
-        streakDays += 1;
-      } else if (diffDays > 1) {
-        if (streakFreezes > 0) {
-          streakFreezes -= 1;
-        } else {
-          streakDays = 1;
-        }
-      }
-    }
-
-    return {
-      ...defaults,
-      ...parsed,
-      streakDays,
-      streakFreezes,
-      lastPlayedDate: today,
-      dailyXp: isNewDay ? 15 : Math.max(15, parsed.dailyXp ?? 15),
-      dailyQuests: isNewDay || !Array.isArray(parsed.dailyQuests) ? createDefaultQuests() : parsed.dailyQuests,
-      lastPlayedByModule: parsed.lastPlayedByModule || {}
-    };
+    localStorage.removeItem(ENGAGEMENT_KEY);
+    localStorage.removeItem(STORY_PROGRESS_KEY);
+    localStorage.removeItem(PIG_SRS_KEY);
   } catch {
-    return defaults;
+    // Ignore storage errors
   }
 }
 
+function loadEngagement() {
+  clearPersistedProgress();
+  return createFreshEngagement();
+}
+
 export function loadStoryProgress() {
-  try {
-    const raw = localStorage.getItem(STORY_PROGRESS_KEY);
-    if (!raw) return { completedStories: {}, lastStoryId: 1 };
-    const parsed = JSON.parse(raw);
-    return {
-      completedStories: parsed?.completedStories && typeof parsed.completedStories === 'object'
-        ? parsed.completedStories
-        : {},
-      lastStoryId: Number.isInteger(parsed?.lastStoryId) ? parsed.lastStoryId : 1
-    };
-  } catch {
-    return { completedStories: {}, lastStoryId: 1 };
-  }
+  return { completedStories: {}, lastStoryId: 1 };
 }
 
 export function loadDirectionPigSrs() {
@@ -119,12 +84,7 @@ export function EngagementProvider({ children }) {
 
   useEffect(() => {
     setSensoryMuted(state.soundMuted);
-    try {
-      localStorage.setItem(ENGAGEMENT_KEY, JSON.stringify(state));
-    } catch {
-      // Ignore quota errors
-    }
-  }, [state]);
+  }, [state.soundMuted]);
 
   const announce = useCallback((msg) => {
     const el = document.getElementById('app-announcer');
