@@ -1,0 +1,923 @@
+/* ==========================================================================
+   PHONIX — Apple HIG + Behavioral Immersion Design System
+   ========================================================================== */
+
+:root {
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+
+  /* Warm iPad Light Mode Palette */
+  --bg-canvas: #FBF9F5;
+  --bg-surface: #FFFFFF;
+  --bg-subtle: #F4F0E8;
+  --text-primary: #1C1C1E;
+  --text-secondary: #5C5C66;
+  --text-muted: #8E8E93;
+  --border-hairline: rgba(28, 28, 30, 0.08);
+
+  /* Frosted Glass */
+  --glass-light-bg: rgba(255, 255, 255, 0.72);
+  --glass-light-border: rgba(255, 255, 255, 0.6);
+  --glass-dark-bg: rgba(28, 28, 30, 0.86);
+  --glass-dark-border: rgba(255, 255, 255, 0.14);
+
+  /* Apple System Accents */
+  --apple-blue: #007AFF;
+  --apple-blue-dark: #0062CC;
+  --apple-green: #34C759;
+  --apple-green-dark: #248A3D;
+  --apple-orange: #FF9500;
+  --apple-red: #FF3B30;
+  --apple-purple: #AF52DE;
+  --apple-gold: #FFCC00;
+  --apple-coral: #FF6B6B;
+
+  /* Geometry & Depth */
+  --radius-card: 24px;
+  --radius-btn: 16px;
+  --radius-pill: 9999px;
+  --shadow-ambient: 0 10px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-lift: 0 18px 40px rgba(0, 0, 0, 0.11), 0 4px 12px rgba(0, 0, 0, 0.05);
+  --focus-ring: 0 0 0 3px rgba(0, 122, 255, 0.45);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background-color: var(--bg-canvas);
+  background-image:
+    radial-gradient(at 10% 12%, rgba(255, 204, 0, 0.12) 0px, transparent 42%),
+    radial-gradient(at 88% 8%, rgba(0, 122, 255, 0.09) 0px, transparent 45%),
+    radial-gradient(at 80% 85%, rgba(175, 82, 222, 0.07) 0px, transparent 48%),
+    radial-gradient(at 15% 88%, rgba(52, 199, 89, 0.08) 0px, transparent 46%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Accessibility */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+:where(button, a, input, select, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Frosted Glass Surfaces */
+.glass-light {
+  background: var(--glass-light-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--glass-light-border);
+}
+
+.glass-dark {
+  background: var(--glass-dark-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-dark-border);
+  color: #FFFFFF;
+}
+
+/* Tactile 3D Buttons */
+.btn-tactile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-btn);
+  border: none;
+  font-family: inherit;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.16);
+  transition: box-shadow 0.08s ease;
+}
+
+.btn-tactile:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.16);
+}
+
+.btn-tactile:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.btn-blue {
+  background: var(--apple-blue);
+  color: #FFFFFF;
+}
+
+.btn-green {
+  background: var(--apple-green);
+  color: #FFFFFF;
+}
+
+.btn-orange {
+  background: var(--apple-orange);
+  color: #FFFFFF;
+}
+
+.btn-surface {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-hairline);
+  box-shadow: 0 4px 0 rgba(28, 28, 30, 0.09);
+}
+
+.btn-surface:active:not(:disabled) {
+  box-shadow: 0 1px 0 rgba(28, 28, 30, 0.09);
+}
+
+.btn-pill {
+  border-radius: var(--radius-pill);
+  min-height: 40px;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 1px solid var(--border-hairline);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ==========================================================================
+   Dashboard Chrome & Layout
+   ========================================================================== */
+
+.dash-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.dash-topbar__inner,
+.dash-main {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+.dash-topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.dash-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.dash-wordmark {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #007AFF 0%, #AF52DE 60%, #FF9500 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dash-status-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-hairline);
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.dash-main {
+  padding: 1.25rem 1.25rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+/* Instagram-Style Daily Story Rings */
+.story-rings-strip {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0.35rem 0.25rem 0.5rem;
+  scrollbar-width: none;
+}
+
+.story-rings-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.story-ring-item {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 92px;
+  font-family: inherit;
+  color: var(--text-primary);
+}
+
+.story-ring-outer {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  padding: 3.5px;
+  display: grid;
+  place-items: center;
+}
+
+.story-ring-outer--active {
+  background: conic-gradient(from 0deg, #FF9500, #FF2D55, #AF52DE, #FF9500);
+  animation: ring-spin 7s linear infinite;
+}
+
+.story-ring-outer--done {
+  background: #D1D1D6;
+}
+
+@keyframes ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+.story-ring-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 2.5px solid var(--bg-canvas);
+  display: grid;
+  place-items: center;
+  font-size: 1.55rem;
+  position: relative;
+}
+
+.story-ring-outer--active .story-ring-inner {
+  animation: ring-counter-spin 7s linear infinite;
+}
+
+@keyframes ring-counter-spin {
+  to { transform: rotate(-360deg); }
+}
+
+.story-ring-check {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--apple-green);
+  color: #FFFFFF;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--bg-canvas);
+}
+
+.story-ring-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+  color: var(--text-secondary);
+}
+
+/* Zero-Decision Hero Card */
+.quick-play-hero {
+  border-radius: var(--radius-card);
+  padding: 1.4rem 1.5rem;
+  background: linear-gradient(135deg, #1C1C1E 0%, #2C2C32 60%, #1F2A44 100%);
+  color: #FFFFFF;
+  box-shadow: var(--shadow-lift);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+.quick-play-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--apple-gold);
+  margin-bottom: 0.35rem;
+}
+
+.quick-play-hero h1 {
+  font-size: clamp(1.45rem, 2.8vw, 2rem);
+  margin-bottom: 0.25rem;
+}
+
+.quick-play-hero p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.96rem;
+}
+
+/* App Store 6 Module Cards Grid */
+.app-modules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 900px) {
+  .app-modules-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-modules-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hig-module-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-ambient);
+  border: 1px solid var(--border-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  position: relative;
+}
+
+.hig-module-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.hig-module-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 1.65rem;
+  background: var(--bg-subtle);
+}
+
+.energy-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+
+.energy-bar {
+  width: 4px;
+  border-radius: 2px;
+  background: #E5E5EA;
+}
+
+.energy-bar--filled {
+  background: var(--apple-green);
+}
+
+.energy-bar--low {
+  background: var(--apple-orange);
+}
+
+.recharge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 149, 0, 0.14);
+  color: #B25000;
+}
+
+.hig-module-card__title {
+  font-size: 1.18rem;
+}
+
+.hig-module-card__desc {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  flex: 1;
+}
+
+.hig-module-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+/* ==========================================================================
+   Full-Bleed Focus Mode & Dynamic Island HUD
+   ========================================================================== */
+
+.focus-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding: 4.5rem 1rem 1.25rem;
+  position: relative;
+}
+
+.dynamic-island-wrap {
+  position: fixed;
+  top: 0.75rem;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  justify-content: center;
+  padding-inline: 0.75rem;
+  pointer-events: none;
+}
+
+.dynamic-island {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 390px;
+  border-radius: 28px;
+  padding: 0.5rem 0.85rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.dynamic-island--fire {
+  box-shadow: 0 0 0 2px rgba(255, 204, 0, 0.75), 0 12px 34px rgba(255, 149, 0, 0.35);
+}
+
+.dynamic-island--coach {
+  border-color: rgba(255, 107, 107, 0.6);
+}
+
+.dynamic-island__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+}
+
+.dynamic-island__exit {
+  background: rgba(255, 255, 255, 0.14);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.7rem;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.dynamic-island__progress {
+  flex: 1;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.dynamic-island__progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, #34C759, #FFCC00);
+}
+
+.dynamic-island__combo {
+  font-size: 0.85rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  color: #FFCC00;
+  flex-shrink: 0;
+}
+
+.dynamic-island__banner {
+  padding: 0.45rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.dynamic-island__banner--fire {
+  background: rgba(255, 204, 0, 0.2);
+  color: #FFE066;
+}
+
+.dynamic-island__banner--coach {
+  background: rgba(255, 107, 107, 0.22);
+  color: #FFD1D1;
+}
+
+.dynamic-island__banner--bonus {
+  background: rgba(175, 82, 222, 0.28);
+  color: #E9D5FF;
+}
+
+/* ==========================================================================
+   iOS Bottom Sheets & Modals
+   ========================================================================== */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(28, 28, 30, 0.42);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .sheet-backdrop {
+    align-items: center;
+  }
+}
+
+.ios-sheet {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 28px;
+  padding: 1.5rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ios-sheet__handle {
+  width: 42px;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: rgba(28, 28, 30, 0.16);
+  margin-bottom: -0.25rem;
+}
+
+/* ==========================================================================
+   Game-Specific Layouts
+   ========================================================================== */
+
+.game-stage-container {
+  width: 100%;
+  max-width: 980px;
+  margin-inline: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Story Game */
+.story-strip-hig {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding: 0.45rem;
+  border-radius: 18px;
+}
+
+.story-pill-hig {
+  flex: 0 0 auto;
+  min-width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid var(--border-hairline);
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.story-pill-hig--current {
+  background: var(--apple-blue);
+  color: #FFFFFF;
+  border-color: var(--apple-blue);
+}
+
+.story-pill-hig--done:not(.story-pill-hig--current) {
+  background: rgba(52, 199, 89, 0.16);
+  color: var(--apple-green-dark);
+  border-color: rgba(52, 199, 89, 0.4);
+}
+
+.story-card-hig {
+  background: var(--bg-surface);
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-ambient);
+  border: 1px solid var(--border-hairline);
+  max-width: 720px;
+  width: 100%;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.story-img-frame {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 18px;
+  background: var(--bg-subtle);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-img-frame img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.story-sentence-btn {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  border: 1.5px solid transparent;
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: clamp(1.1rem, 1.8vw, 1.32rem);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.story-sentence-btn--active {
+  background: rgba(255, 204, 0, 0.25);
+  border-color: rgba(255, 204, 0, 0.7);
+}
+
+.thumb-bar {
+  position: sticky;
+  bottom: 0.75rem;
+  z-index: 30;
+  max-width: 720px;
+  width: 100%;
+  margin: auto auto 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-lift);
+}
+
+/* Remi Game */
+.remi-table-hig {
+  min-height: 220px;
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  border: 2px dashed rgba(28, 28, 30, 0.18);
+  background: rgba(255, 255, 255, 0.55);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.remi-table-hig--active {
+  border-color: var(--apple-green);
+  background: rgba(52, 199, 89, 0.1);
+}
+
+.remi-hand-rack-hig {
+  border-radius: var(--radius-card);
+  padding: 0.8rem;
+  overflow-x: auto;
+  box-shadow: var(--shadow-ambient);
+}
+
+.remi-hand-grid-hig {
+  display: grid;
+  grid-template-columns: repeat(14, minmax(68px, 1fr));
+  gap: 0.45rem;
+  min-width: 1000px;
+}
+
+.remi-pic-card {
+  width: 100%;
+  height: 104px;
+  padding: 0;
+  border-radius: 12px;
+  border: 2.5px solid transparent;
+  background: transparent;
+  overflow: hidden;
+  cursor: grab;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remi-pic-card--selected {
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.28), 0 10px 20px rgba(0, 0, 0, 0.16);
+}
+
+.remi-pic-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+/* Tetris Playfield */
+.tetris-arena-hig {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 1060px;
+  margin-inline: auto;
+}
+
+@media (min-width: 860px) {
+  .tetris-arena-hig {
+    grid-template-columns: 145px 1fr;
+    align-items: start;
+  }
+}
+
+.tetris-playfield-hig {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 360px;
+  max-height: 520px;
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.5rem;
+  border-radius: 20px;
+  background: var(--bg-subtle);
+  overflow: hidden;
+}
+
+.tetris-playfield-hig--fever {
+  box-shadow: inset 0 0 0 3px rgba(255, 204, 0, 0.85), 0 0 28px rgba(175, 82, 222, 0.25);
+}
+
+.tetris-lane-hig {
+  border-radius: 14px;
+  border: 2px dashed transparent;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  padding: 0;
+}
+
+.tetris-lane-hig--active {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 122, 255, 0.45);
+}
+
+.tetris-falling-hig {
+  position: absolute;
+  top: 6px;
+  width: min(192px, 30%);
+  height: 196px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  pointer-events: none;
+  border-radius: 14px;
+  border: 2.5px solid transparent;
+}
+
+.tetris-falling-hig--controlled {
+  border-color: var(--apple-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.22);
+  z-index: 2;
+}
+
+.tetris-falling-hig img {
+  width: 100%;
+  height: 174px;
+  object-fit: contain;
+  border-radius: 10px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.14));
+}
+
+.tetris-bucket-hig {
+  min-height: 62px;
+  border-radius: 16px;
+  border: 2px solid var(--border-hairline);
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-size: 1.4rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.tetris-bucket-hig--active {
+  border-color: var(--apple-blue);
+  color: var(--apple-blue);
+  background: rgba(0, 122, 255, 0.08);
+}
+
+.tetris-bucket-hig--pulse {
+  border-color: var(--apple-green);
+  background: rgba(52, 199, 89, 0.18);
+  color: var(--apple-green-dark);
+  box-shadow: 0 0 0 4px rgba(52, 199, 89, 0.3);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .story-ring-outer--active,
+  .story-ring-outer--active .story-ring-inner {
+    animation: none !important;
+  }
+}

@@ -1,4 +1,6 @@
 .DS_Store
 node_modules/
+dist/
 *.log
 odd_one_out_img/*.png
+public/odd_one_out_img/*.png
