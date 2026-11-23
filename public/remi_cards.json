@@ -9,7 +9,6 @@
   { "word": "man", "vowel": "a", "ending": "an", "firstLetter": "m", "isJoker": false },
   { "word": "map", "vowel": "a", "ending": "ap", "firstLetter": "m", "isJoker": false },
   { "word": "sad", "vowel": "a", "ending": "ad", "firstLetter": "s", "isJoker": false },
-  { "word": "mat", "vowel": "a", "ending": "at", "firstLetter": "m", "isJoker": false },
 
   { "word": "bed", "vowel": "e", "ending": "ed", "firstLetter": "b", "isJoker": false },
   { "word": "jet", "vowel": "e", "ending": "et", "firstLetter": "j", "isJoker": false },

@@ -159,10 +159,12 @@ export default function OddOneOutGame({ onExit }) {
 
   function handleDragEnd(itemId, point) {
     if (phase !== 'placing') return;
+    const clientX = point.x - window.scrollX;
+    const clientY = point.y - window.scrollY;
     for (const [tId, el] of Object.entries(slotRefs.current)) {
       if (!el) continue;
       const r = el.getBoundingClientRect();
-      if (point.x >= r.left && point.x <= r.right && point.y >= r.top && point.y <= r.bottom) {
+      if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) {
         placeItemInSlot(itemId, tId);
         return;
       }
@@ -496,17 +498,8 @@ export default function OddOneOutGame({ onExit }) {
               </div>
             </div>
 
-            {/* 4 Draggable Items Tray */}
-            <div
-              className="slot-tray-dark"
-              style={{
-                borderRadius: 24,
-                padding: '0.9rem',
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-                gap: '0.75rem'
-              }}
-            >
+            {/* 4 Draggable Items Tray (4 cols desktop/tablet, 2x2 phones) */}
+            <div className="slot-tray-dark">
               {round.draggables.map((item) => {
                 const isPlaced = placedIds.includes(item.id);
                 const isOddFinale = round.completed && !isPlaced && item.id === round.distractorId;

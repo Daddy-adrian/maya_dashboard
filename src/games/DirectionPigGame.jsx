@@ -227,15 +227,11 @@ export default function DirectionPigGame({ onExit }) {
                 )}
               </div>
 
-              {/* 3 Shuffled Choices */}
+              {/* 3 Shuffled Choices (Stacks cleanly on narrow phones for word labels) */}
               <div
-                style={{
-                  width: '100%',
-                  maxWidth: current.mode === 'picture-to-word' ? 580 : 760,
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                  gap: '0.8rem'
-                }}
+                className={`pig-options-grid ${
+                  current.mode === 'picture-to-word' ? 'pig-options-grid--words' : 'pig-options-grid--pics'
+                }`}
               >
                 {current.options.map((opt) => {
                   const isRight = solved && opt.id === current.target.id;
@@ -248,13 +244,12 @@ export default function DirectionPigGame({ onExit }) {
                       className="btn-tactile btn-surface"
                       animate={isWrong ? { x: [-5, 5, -4, 4, 0] } : { x: 0 }}
                       transition={SPRING_SNAPPY}
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.94 }}
+                      whileTap={{ scale: 0.96 }}
                       style={{
-                        minHeight: current.mode === 'picture-to-word' ? 66 : 160,
-                        padding: current.mode === 'picture-to-word' ? '0.85rem' : '0.45rem',
-                        fontSize: '1.15rem',
-                        borderRadius: 20,
+                        minHeight: current.mode === 'picture-to-word' ? 58 : 'clamp(112px, 24vw, 160px)',
+                        padding: current.mode === 'picture-to-word' ? '0.75rem 0.9rem' : '0.4rem',
+                        fontSize: 'clamp(0.96rem, 0.85rem + 0.5vw, 1.15rem)',
+                        borderRadius: 18,
                         background: isRight
                           ? 'rgba(52, 199, 89, 0.2)'
                           : isWrong
@@ -270,7 +265,7 @@ export default function DirectionPigGame({ onExit }) {
                         <img
                           src={assetUrl(opt.image)}
                           alt={opt.label}
-                          style={{ maxWidth: '100%', maxHeight: 145, objectFit: 'contain', borderRadius: 12 }}
+                          style={{ maxWidth: '100%', maxHeight: 'clamp(96px, 20vw, 142px)', objectFit: 'contain', borderRadius: 12 }}
                         />
                       )}
                     </motion.button>

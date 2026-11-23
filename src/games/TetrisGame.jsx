@@ -54,6 +54,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
   const [pulseBucket, setPulseBucket] = useState(null);
   const [activeCards, setActiveCards] = useState([]);
   const [phase, setPhase] = useState('playing'); // 'playing' | 'retry' | 'done'
+  const [fieldHeight, setFieldHeight] = useState(400);
 
   const stateRef = useRef({
     roundCards: [],
@@ -69,6 +70,23 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
   });
   const playfieldRef = useRef(null);
   const rafRef = useRef(null);
+  const swipeStartRef = useRef(null);
+
+  useEffect(() => {
+    const el = playfieldRef.current;
+    if (!el) return undefined;
+    const updateH = () => {
+      if (el.clientHeight > 0) setFieldHeight(el.clientHeight);
+    };
+    updateH();
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(updateH);
+      ro.observe(el);
+      return () => ro.disconnect();
+    }
+    window.addEventListener('resize', updateH);
+    return () => window.removeEventListener('resize', updateH);
+  }, []);
 
   useEffect(() => {
     stateRef.current.paceLevel = paceLevel;
@@ -323,7 +341,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
         moveControlled(1);
-      } else if (e.key === 'ArrowDown') {
+      } else if (e.key === 'ArrowDown' || e.key === ' ') {
         e.preventDefault();
         triggerDrop();
       }
@@ -339,7 +357,25 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
   const controlled = getControlled();
   const activeLane = controlled ? controlled.lane : 0;
   const isFever = combo >= 5;
-  const fieldH = playfieldRef.current?.clientHeight || 420;
+  const fieldH = fieldHeight;
+  const cardH = Math.min(186, Math.max(108, Math.round(fieldH * 0.42)));
+
+  function handleFieldPointerDown(e) {
+    swipeStartRef.current = { x: e.clientX, y: e.clientY };
+  }
+
+  function handleFieldPointerUp(e) {
+    const start = swipeStartRef.current;
+    swipeStartRef.current = null;
+    if (!start) return;
+    const dx = e.clientX - start.x;
+    const dy = e.clientY - start.y;
+    if (Math.abs(dx) > 28 && Math.abs(dx) > Math.abs(dy)) {
+      moveControlled(dx > 0 ? 1 : -1);
+    } else if (dy > 32 && Math.abs(dy) > Math.abs(dx)) {
+      triggerDrop();
+    }
+  }
 
   return (
     <div className="focus-shell focus-shell--pastel-tetris">
@@ -351,54 +387,58 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
       />
 
       <div className="tetris-arena-hig">
-        {/* Left Spawn Speed Slider (0-10, default 1) */}
-        <aside className="hig-module-card" style={{ alignItems: 'center', textAlign: 'center', gap: '0.6rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontWeight: 700, fontSize: '0.88rem', color: 'var(--text-secondary)' }}>
-            <Gauge size={16} strokeWidth={2.2} />
-            Spawn Speed
+        {/* Spawn Speed Slider (Left on Desktop, Compact Bar on Mobile/Tablet) */}
+        <aside className="hig-module-card tetris-speed-panel">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontWeight: 700, fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
+            <Gauge size={15} strokeWidth={2.2} aria-hidden="true" />
+            <span>Speed:</span>
+            <span className="tabular-nums" style={{ fontSize: '0.95rem', fontWeight: 800, color: '#7A63C9' }}>
+              {paceLevel}
+            </span>
           </div>
-          <span className="tabular-nums" style={{ fontSize: '1.6rem', fontWeight: 800, color: '#7A63C9' }}>
-            {paceLevel}
-          </span>
-          <input
-            type="range"
-            min="0"
-            max="10"
-            step="1"
-            value={paceLevel}
-            onChange={(e) => {
-              setPaceLevel(Number(e.target.value));
-              e.target.blur();
-            }}
-            style={{ width: '100%', accentColor: '#9B84E8', cursor: 'pointer' }}
-            aria-label="Spawn speed 0 to 10"
-          />
-          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 700 }}>
-            <span>0</span>
-            <span>5</span>
-            <span>10</span>
+          <div className="tetris-speed-panel__slider-wrap" style={{ width: '100%' }}>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="1"
+              value={paceLevel}
+              onChange={(e) => {
+                setPaceLevel(Number(e.target.value));
+                e.target.blur();
+              }}
+              style={{ width: '100%', accentColor: '#9B84E8', cursor: 'pointer' }}
+              aria-label="Spawn speed 0 to 10"
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', fontSize: '0.62rem', color: 'var(--text-muted)', fontWeight: 700 }}>
+              <span>0</span>
+              <span>5</span>
+              <span>10</span>
+            </div>
           </div>
           <motion.button
             type="button"
-            className="btn-pill"
-            style={{ width: '100%', justifyContent: 'center', fontSize: '0.82rem' }}
+            className="btn-pill tetris-speed-panel__mode-btn"
+            style={{ width: '100%', justifyContent: 'center' }}
             {...TAP_PROPS}
             onClick={() => {
               playTap();
               setSpeedMode((m) => (m === 'slow' ? 'normal' : 'slow'));
             }}
           >
-            Fall: {speedMode === 'slow' ? 'Slow' : 'Normal'}
+            {speedMode === 'slow' ? 'Slow' : 'Normal'}
           </motion.button>
         </aside>
 
         {/* Pastel 3D Tetris Playfield + Buckets + Controls */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', minInlineSize: 0 }}>
           <div className="tetris-board-frame">
             <div
               ref={playfieldRef}
               className={`tetris-playfield-hig ${isFever ? 'tetris-playfield-hig--fever' : ''}`}
               style={{ gridTemplateColumns: `repeat(${buckets.length}, 1fr)` }}
+              onPointerDown={handleFieldPointerDown}
+              onPointerUp={handleFieldPointerUp}
             >
               {buckets.map((verb, laneIdx) => (
                 <button
@@ -427,7 +467,7 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
 
               {activeCards.map((item) => {
                 const isCtrl = controlled?.uid === item.uid;
-                const maxTop = Math.max(0, fieldH - 208);
+                const maxTop = Math.max(0, fieldH - cardH - 14);
                 const topPx = item.progressY * maxTop;
                 const leftPct = (item.lane + 0.5) * (100 / buckets.length);
                 return (
@@ -436,11 +476,12 @@ export default function TetrisGame({ mode = 'am_is_are', onExit }) {
                     className={`tetris-falling-hig ${isCtrl ? 'tetris-falling-hig--controlled' : ''}`}
                     style={{
                       left: `${leftPct}%`,
+                      height: `${cardH}px`,
                       transform: `translate(-50%, ${topPx}px)`,
                       background: item.pastelColor || '#DFD1FF'
                     }}
                   >
-                    <span style={{ fontSize: '0.94rem', fontWeight: 800, color: '#362F4B' }}>
+                    <span style={{ fontSize: 'clamp(0.62rem, 0.55rem + 0.35vw, 0.86rem)', fontWeight: 800, color: '#362F4B' }}>
                       {item.card.pronoun}
                     </span>
                     <img src={item.card.image} alt={item.card.pronoun} />

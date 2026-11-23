@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Home, Sparkles } from 'lucide-react';
 import { SPRING_SHEET, TAP_PROPS } from '../utils/motion';
 import { playTap } from '../utils/sensory';
 
 /**
- * Zero-Stopping-Cue iOS Frosted-Glass Bottom Sheet for Round Completion.
- * Celebrates progress (LDW) and provides a glowing "Next Challenge ->" CTA
- * with a 5-second radial auto-advance ring (pauses on user interaction).
+ * Zero-Stopping-Cue Bottom Sheet for Round Completion.
+ * Celebrates progress and provides a "Next Challenge ->" CTA
+ * with a 5-second radial auto-advance ring (pauses on interaction, guarded against double-fire).
  */
 export default function RoundCompleteSheet({
   title = 'Awesome Effort!',
@@ -20,11 +20,18 @@ export default function RoundCompleteSheet({
 }) {
   const [paused, setPaused] = useState(false);
   const [remaining, setRemaining] = useState(autoAdvanceSeconds);
+  const firedRef = useRef(false);
+
+  const triggerNextOnce = () => {
+    if (firedRef.current || !onNext) return;
+    firedRef.current = true;
+    onNext();
+  };
 
   useEffect(() => {
     if (paused || !onNext) return undefined;
     if (remaining <= 0) {
-      onNext();
+      triggerNextOnce();
       return undefined;
     }
     const timer = setTimeout(() => {
@@ -98,7 +105,7 @@ export default function RoundCompleteSheet({
               {...TAP_PROPS}
               onClick={() => {
                 playTap();
-                onNext();
+                triggerNextOnce();
               }}
             >
               <span>{nextLabel}</span>

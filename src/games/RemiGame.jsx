@@ -207,12 +207,14 @@ export default function RemiGame({ onExit }) {
                 didDragRef.current = false;
               }, 60);
               const rect = tableRef.current?.getBoundingClientRect();
+              const clientX = info.point.x - window.scrollX;
+              const clientY = info.point.y - window.scrollY;
               if (
                 rect &&
-                info.point.x >= rect.left &&
-                info.point.x <= rect.right &&
-                info.point.y >= rect.top &&
-                info.point.y <= rect.bottom
+                clientX >= rect.left &&
+                clientX <= rect.right &&
+                clientY >= rect.top &&
+                clientY <= rect.bottom
               ) {
                 const group = selected.includes(idx) ? selected : [idx];
                 tryPlaySlots(group);
@@ -245,8 +247,8 @@ export default function RemiGame({ onExit }) {
       <DynamicIslandHUD progress={progress} combo={combo} statusBanner={banner} onExit={onExit} />
 
       <div className="game-stage-container" style={{ maxWidth: 1020 }}>
-        {/* Royal Blue Felt Table + Side Ivory Draw Stack */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 128px', gap: '0.85rem', alignItems: 'stretch' }}>
+        {/* Wooden Board + Side/Compact Wooden Draw Stack */}
+        <div className="remi-top-grid">
           <div ref={tableRef} className="remi-table-hig">
             <div className="remi-table-watermark" aria-hidden="true">
               PHONIX Remi

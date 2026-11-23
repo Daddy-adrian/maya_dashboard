@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, X } from 'lucide-react';
 import { SPRING_SHEET, SPRING_BOUNCY, TAP_PROPS } from '../utils/motion';
@@ -6,11 +6,20 @@ import { playTap } from '../utils/sensory';
 import { useEngagement, STICKER_CATALOG } from '../context/EngagementContext';
 
 /**
- * Trophy Room Sheet — Draggable Sticker Canvas (IKEA Effect)
+ * Trophy Room Sheet — Draggable Sticker Canvas
  */
 export default function TrophyRoomModal({ open, onClose }) {
   const { engagement, updateStickerPosition } = useEngagement();
   const canvasRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -88,7 +97,11 @@ export default function TrophyRoomModal({ open, onClose }) {
                 transition={SPRING_BOUNCY}
                 onDragEnd={(_, info) => {
                   playTap();
-                  updateStickerPosition(placed.id, placed.x + info.offset.x, placed.y + info.offset.y);
+                  const w = canvasRef.current?.clientWidth || 300;
+                  const h = canvasRef.current?.clientHeight || 240;
+                  const nextX = Math.max(4, Math.min(w - 76, placed.x + info.offset.x));
+                  const nextY = Math.max(4, Math.min(h - 68, placed.y + info.offset.y));
+                  updateStickerPosition(placed.id, nextX, nextY);
                 }}
                 style={{
                   position: 'absolute',

@@ -167,92 +167,105 @@ export default function Dashboard({ onOpenModule }) {
         <div className="ig-logo">PHONIX</div>
 
         <nav className="ig-nav">
-          <button type="button" className="ig-nav-item ig-nav-item--active" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <Home size={22} strokeWidth={2.3} />
+          <button type="button" className="ig-nav-item ig-nav-item--active" title="Home" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <Home size={22} strokeWidth={2.3} aria-hidden="true" />
             <span>Home</span>
           </button>
           <button
             type="button"
             className="ig-nav-item"
+            title="Quick Play"
             onClick={() => {
               playTap();
               onOpenModule(quickPlayTarget.moduleId, quickPlayTarget.mode);
             }}
           >
-            <Compass size={22} strokeWidth={2} />
+            <Compass size={22} strokeWidth={2} aria-hidden="true" />
             <span>Quick Play</span>
           </button>
           <button
             type="button"
             className="ig-nav-item"
+            title="Stories"
             onClick={() => {
               playTap();
               onOpenModule('story-comprehension', null);
             }}
           >
-            <BookOpen size={22} strokeWidth={2} />
+            <BookOpen size={22} strokeWidth={2} aria-hidden="true" />
             <span>Stories</span>
           </button>
           <button
             type="button"
             className="ig-nav-item"
+            title="Next Level Reading"
             onClick={() => {
               playTap();
               onOpenModule('next-level-reading', null);
             }}
           >
-            <Lock size={21} strokeWidth={2} />
+            <Lock size={21} strokeWidth={2} aria-hidden="true" />
             <span>Next Level</span>
           </button>
           <button
             type="button"
             className="ig-nav-item"
+            title="PHONIX Remi"
             onClick={() => {
               playTap();
               onOpenModule('cvc-rummikub', null);
             }}
           >
-            <Layers size={22} strokeWidth={2} />
+            <Layers size={22} strokeWidth={2} aria-hidden="true" />
             <span>Remi</span>
           </button>
           <button
             type="button"
             className="ig-nav-item"
+            title="Casino Slots"
             onClick={() => {
               playTap();
               onOpenModule('odd-one-out', null);
             }}
           >
-            <Sparkles size={22} strokeWidth={2} />
+            <Sparkles size={22} strokeWidth={2} aria-hidden="true" />
             <span>Casino Slots</span>
           </button>
           <button
             type="button"
             className="ig-nav-item"
+            title="Retro Tetris"
             onClick={() => {
               playTap();
               onOpenModule('am-is-are', 'tetris');
             }}
           >
-            <Gamepad2 size={22} strokeWidth={2} />
+            <Gamepad2 size={22} strokeWidth={2} aria-hidden="true" />
             <span>Retro Tetris</span>
           </button>
           <button
             type="button"
             className="ig-nav-item"
+            title="Trophies"
             onClick={() => {
               playTap();
               setTrophyOpen(true);
             }}
           >
-            <Trophy size={22} strokeWidth={2} />
+            <Trophy size={22} strokeWidth={2} aria-hidden="true" />
             <span>Trophies</span>
           </button>
         </nav>
 
         <div className="ig-sidebar-footer">
-          <button type="button" className="ig-nav-item" onClick={toggleMute}>
-            {engagement.soundMuted ? <VolumeX size={21} strokeWidth={2} /> : <Volume2 size={21} strokeWidth={2} />}
+          <button
+            type="button"
+            className="ig-nav-item"
+            title={engagement.soundMuted ? 'Sound Off' : 'Sound On'}
+            aria-label={engagement.soundMuted ? 'Unmute sounds' : 'Mute sounds'}
+            onClick={toggleMute}
+          >
+            {engagement.soundMuted ? <VolumeX size={21} strokeWidth={2} aria-hidden="true" /> : <Volume2 size={21} strokeWidth={2} aria-hidden="true" />}
             <span>{engagement.soundMuted ? 'Sound Off' : 'Sound On'}</span>
           </button>
         </div>
@@ -548,6 +561,67 @@ export default function Dashboard({ onOpenModule }) {
           PHONIX English Learning Studio • Session resets on refresh
         </div>
       </aside>
+
+      {/* Mobile Instagram Bottom Tab Bar */}
+      <nav className="ig-mobile-tabbar" aria-label="Mobile Navigation">
+        <button
+          type="button"
+          className="ig-tab-btn"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Home"
+        >
+          <Home size={21} strokeWidth={2.2} aria-hidden="true" />
+          <span>Home</span>
+        </button>
+        <button
+          type="button"
+          className="ig-tab-btn"
+          onClick={() => {
+            playTap();
+            onOpenModule('story-comprehension', null);
+          }}
+          aria-label="Stories"
+        >
+          <BookOpen size={21} strokeWidth={2} aria-hidden="true" />
+          <span>Stories</span>
+        </button>
+        <button
+          type="button"
+          className="ig-tab-btn"
+          onClick={() => {
+            playTap();
+            onOpenModule('cvc-rummikub', null);
+          }}
+          aria-label="Remi"
+        >
+          <Layers size={21} strokeWidth={2} aria-hidden="true" />
+          <span>Remi</span>
+        </button>
+        <button
+          type="button"
+          className="ig-tab-btn"
+          onClick={() => {
+            playTap();
+            onOpenModule('odd-one-out', null);
+          }}
+          aria-label="Casino Slots"
+        >
+          <Sparkles size={21} strokeWidth={2} aria-hidden="true" />
+          <span>Slots</span>
+        </button>
+        <button
+          type="button"
+          className="ig-tab-btn"
+          onClick={() => {
+            playTap();
+            onOpenModule('am-is-are', 'tetris');
+          }}
+          aria-label="Retro Tetris"
+        >
+          <Gamepad2 size={21} strokeWidth={2} aria-hidden="true" />
+          <span>Tetris</span>
+        </button>
+      </nav>
 
       <TrophyRoomModal open={trophyOpen} onClose={() => setTrophyOpen(false)} />
     </div>

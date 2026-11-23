@@ -227,7 +227,7 @@ export default function BlankSentencesGame({ mode = 'am_is_are', onExit }) {
         </AnimatePresence>
 
         {/* Thumb-Zone Pill Word Buttons */}
-        <div className="thumb-bar glass-light" style={{ justifyContent: 'center', gap: '0.85rem' }}>
+        <div className="thumb-bar glass-light blank-word-bar">
           {options.map((opt) => {
             const isRight = solved && current?.answer === opt;
             const isWrong = wrong.includes(opt);
@@ -236,14 +236,10 @@ export default function BlankSentencesGame({ mode = 'am_is_are', onExit }) {
                 key={opt}
                 type="button"
                 disabled={solved || isDone}
-                className="btn-tactile btn-surface"
+                className="btn-tactile btn-surface blank-word-btn"
                 animate={isWrong ? { x: [-5, 5, -4, 4, 0] } : { x: 0 }}
                 {...TAP_PROPS}
                 style={{
-                  minWidth: 112,
-                  flex: 1,
-                  borderRadius: 9999,
-                  fontSize: '1.3rem',
                   background: isRight
                     ? 'rgba(52, 199, 89, 0.2)'
                     : isWrong

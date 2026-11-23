@@ -312,7 +312,7 @@ export default function NextLevelReadingGame({ onExit }) {
         ) : (
           <>
             {/* 1-11 Quick Selector Strip */}
-            <div className="story-strip-hig glass-light" aria-label="Next Level Comic Stories">
+            <div className="story-strip-hig glass-light" role="region" tabIndex={0} aria-label="Next Level Comic Stories">
               {stories.map((s, idx) => {
                 const isCur = idx === currentIdx;
                 const isDone = Boolean(completedIds[s.id]);
@@ -375,28 +375,11 @@ export default function NextLevelReadingGame({ onExit }) {
                     </div>
 
                     {/* Full Comic Story Image (No writing beneath) */}
-                    <div
-                      style={{
-                        width: '100%',
-                        borderRadius: 18,
-                        background: '#FFFFFF',
-                        border: '1px solid rgba(48, 42, 28, 0.08)',
-                        overflow: 'hidden',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                    >
+                    <div className="story-comic-frame">
                       <img
                         src={assetUrl(story.imagePath)}
                         alt={`Comic story ${story.displayNum}: ${story.title}`}
-                        style={{
-                          width: '100%',
-                          height: 'auto',
-                          maxHeight: '66dvh',
-                          objectFit: 'contain',
-                          display: 'block'
-                        }}
+                        loading="eager"
                       />
                     </div>
                   </>

@@ -227,7 +227,7 @@ export default function StoryGame({ onExit }) {
         ) : (
           <>
             {/* 1-28 Quick Selector Strip */}
-            <div className="story-strip-hig glass-light" aria-label="Stories 1 to 28">
+            <div className="story-strip-hig glass-light" role="region" tabIndex={0} aria-label="Stories 1 to 28">
               {stories.map((s, idx) => {
                 const done = Boolean(storyProgress.completedStories?.[String(s.id)]);
                 return (
@@ -294,11 +294,29 @@ export default function StoryGame({ onExit }) {
                             key={sIdx}
                             type="button"
                             className={`story-sentence-btn ${isGlow ? 'story-sentence-btn--active' : ''}`}
-                            animate={{ scale: isGlow ? 1.02 : 1 }}
-                            transition={SPRING_BOUNCY}
+                            animate={{ scale: isGlow ? 1.015 : 1 }}
+                            transition={SPRING_SNAPPY}
                             onClick={() => {
                               playTap();
-                              setActiveSentence(activeSentence === sIdx ? -1 : sIdx);
+                              if (!speechSupported) {
+                                setActiveSentence(activeSentence === sIdx ? -1 : sIdx);
+                                return;
+                              }
+                              stopSpeech();
+                              setActiveSentence(sIdx);
+                              setMusicDucked(true);
+                              const u = new SpeechSynthesisUtterance(sent);
+                              u.lang = 'en-US';
+                              u.rate = 0.88;
+                              u.onend = () => {
+                                setActiveSentence(-1);
+                                setMusicDucked(false);
+                              };
+                              u.onerror = () => {
+                                setActiveSentence(-1);
+                                setMusicDucked(false);
+                              };
+                              window.speechSynthesis.speak(u);
                             }}
                           >
                             {sent}
@@ -409,7 +427,7 @@ export default function StoryGame({ onExit }) {
                     <ArrowLeft size={18} strokeWidth={2.2} />
                     {step === 'setB' ? 'Set A' : 'Story'}
                   </motion.button>
-                  {step === 'setA' && (
+                  {step === 'setA' ? (
                     <motion.button
                       type="button"
                       className="btn-tactile btn-blue"
@@ -417,6 +435,16 @@ export default function StoryGame({ onExit }) {
                       onClick={() => goToStep('setB')}
                     >
                       Next: Set B <ArrowRight size={18} strokeWidth={2.2} />
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      type="button"
+                      className="btn-tactile btn-green"
+                      disabled={currentIdx >= stories.length - 1}
+                      {...TAP_PROPS}
+                      onClick={() => selectStory(currentIdx + 1)}
+                    >
+                      Next Story <ArrowRight size={18} strokeWidth={2.2} />
                     </motion.button>
                   )}
                 </>
@@ -434,7 +462,10 @@ export default function StoryGame({ onExit }) {
             xpEarned={!quiz.setA.mistake && !quiz.setB.mistake ? 40 : 25}
             nextLabel={currentIdx < stories.length - 1 ? `Story ${stories[currentIdx + 1].id}` : 'Play Story 1 Again'}
             onNext={() => selectStory(currentIdx < stories.length - 1 ? currentIdx + 1 : 0)}
-            onDashboard={onExit}
+            onDashboard={() => {
+              stopSpeech();
+              onExit();
+            }}
           />
         )}
       </AnimatePresence>
