@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   Home,
   Compass,
@@ -18,7 +18,11 @@ import {
   Check,
   Play,
   BadgeCheck,
-  Lock
+  Lock,
+  ChevronLeft,
+  ChevronRight,
+  Navigation,
+  Puzzle
 } from 'lucide-react';
 import { useEngagement, DAILY_GOAL_XP, loadDirectionPigSrs } from '../context/EngagementContext';
 import { assetUrl } from '../utils/assets';
@@ -30,6 +34,7 @@ export const PHONIX_MODULES = [
     id: 'story-comprehension',
     handle: 'story.comprehension',
     title: 'Story Comprehension',
+    shortLabel: 'Stories',
     subtitle: 'Reading Studio • 28 Stories',
     icon: '📖',
     previewImg: 'story_images/1.jpeg',
@@ -41,6 +46,7 @@ export const PHONIX_MODULES = [
     id: 'next-level-reading',
     handle: 'next.level.reading',
     title: 'Next Level Reading',
+    shortLabel: 'Next Level',
     subtitle: 'Locked • 11 Comic Stories',
     icon: '🔒',
     previewImg: 'next_level_story_images/1.jpeg',
@@ -53,6 +59,7 @@ export const PHONIX_MODULES = [
     id: 'cvc-rummikub',
     handle: 'phonix.remi',
     title: 'PHONIX Remi',
+    shortLabel: 'Remi',
     subtitle: 'Wooden Board • 3D Tiles',
     icon: '🃏',
     previewImg: 'vowels_images/joker.jpeg',
@@ -64,6 +71,7 @@ export const PHONIX_MODULES = [
     id: 'direction-pig',
     handle: 'direction.pig',
     title: 'Direction Pig',
+    shortLabel: 'Direction Pig',
     subtitle: 'Spatial Prepositions',
     icon: '🐷',
     previewImg: 'directions/pig_before_infront.jpeg',
@@ -75,6 +83,7 @@ export const PHONIX_MODULES = [
     id: 'odd-one-out',
     handle: 'odd.one.out.casino',
     title: 'Odd One Out',
+    shortLabel: 'Odd One Out',
     subtitle: 'Dark Casino Slot Machine',
     icon: '🎰',
     previewImg: 'odd_one_out_img/bag.jpeg',
@@ -86,6 +95,7 @@ export const PHONIX_MODULES = [
     id: 'am-is-are',
     handle: 'tetris.am.is.are',
     title: 'Am / Is / Are',
+    shortLabel: 'Am / Is / Are',
     subtitle: 'Retro Pastel Tetris & Sentences',
     icon: '🧱',
     previewImg: 'pronoun/they.jpeg',
@@ -98,6 +108,7 @@ export const PHONIX_MODULES = [
     id: 'have-has-tetris',
     handle: 'tetris.have.has',
     title: 'Have / Has',
+    shortLabel: 'Have / Has',
     subtitle: 'Retro Pastel Tetris & Sentences',
     icon: '🧩',
     previewImg: 'pronoun/she.jpeg',
@@ -113,6 +124,21 @@ export default function Dashboard({ onOpenModule }) {
   const [trophyOpen, setTrophyOpen] = useState(false);
   const [likedIds, setLikedIds] = useState({});
   const [savedIds, setSavedIds] = useState({});
+  const storiesRef = useRef(null);
+
+  const questByModule = useMemo(() => {
+    const map = {};
+    for (const q of engagement.dailyQuests || []) {
+      map[q.moduleId] = q;
+    }
+    return map;
+  }, [engagement.dailyQuests]);
+
+  const scrollStories = (dir) => {
+    const el = storiesRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * 240, behavior: 'smooth' });
+  };
 
   const dailyPct = Math.min(100, Math.round((engagement.dailyXp / DAILY_GOAL_XP) * 100));
   const ringRadius = 15;
@@ -222,26 +248,50 @@ export default function Dashboard({ onOpenModule }) {
           <button
             type="button"
             className="ig-nav-item"
-            title="Casino Slots"
+            title="Direction Pig"
+            onClick={() => {
+              playTap();
+              onOpenModule('direction-pig', null);
+            }}
+          >
+            <Navigation size={21} strokeWidth={2} aria-hidden="true" />
+            <span>Direction Pig</span>
+          </button>
+          <button
+            type="button"
+            className="ig-nav-item"
+            title="Odd One Out"
             onClick={() => {
               playTap();
               onOpenModule('odd-one-out', null);
             }}
           >
             <Sparkles size={22} strokeWidth={2} aria-hidden="true" />
-            <span>Casino Slots</span>
+            <span>Odd One Out</span>
           </button>
           <button
             type="button"
             className="ig-nav-item"
-            title="Retro Tetris"
+            title="Am / Is / Are"
             onClick={() => {
               playTap();
               onOpenModule('am-is-are', 'tetris');
             }}
           >
             <Gamepad2 size={22} strokeWidth={2} aria-hidden="true" />
-            <span>Retro Tetris</span>
+            <span>Am / Is / Are</span>
+          </button>
+          <button
+            type="button"
+            className="ig-nav-item"
+            title="Have / Has"
+            onClick={() => {
+              playTap();
+              onOpenModule('have-has-tetris', 'tetris');
+            }}
+          >
+            <Puzzle size={21} strokeWidth={2} aria-hidden="true" />
+            <span>Have / Has</span>
           </button>
           <button
             type="button"
@@ -292,40 +342,67 @@ export default function Dashboard({ onOpenModule }) {
 
       {/* Center Instagram Feed Column */}
       <main id="main-content" className="ig-feed-col">
-        {/* Instagram Stories Strip (Daily Micro-Quests) */}
-        <section className="ig-stories-bar" aria-label="Daily Quests Stories">
-          {engagement.dailyQuests.map((quest) => {
-            const done = quest.progress >= quest.target;
-            return (
-              <button
-                key={quest.id}
-                type="button"
-                className="ig-story-item"
-                onClick={() => {
-                  playTap();
-                  onOpenModule(quest.moduleId, quest.moduleId === 'am-is-are' ? 'tetris' : null);
-                }}
-              >
-                <div className={`ig-story-ring ${done ? 'ig-story-ring--done' : 'ig-story-ring--active'}`}>
-                  <div className="ig-story-avatar">
-                    <span aria-hidden="true">{quest.icon}</span>
-                    {done && (
-                      <span className="ig-story-check" aria-label="Completed">
-                        <Check size={12} strokeWidth={3} />
-                      </span>
-                    )}
+        {/* Instagram Stories Strip — All Games in Exact Post Order */}
+        <section className="ig-stories-wrap" aria-label="All Games Stories">
+          <button
+            type="button"
+            className="ig-stories-arrow ig-stories-arrow--left"
+            onClick={() => scrollStories(-1)}
+            aria-label="Scroll games left"
+          >
+            <ChevronLeft size={18} strokeWidth={2.5} />
+          </button>
+
+          <div
+            ref={storiesRef}
+            className="ig-stories-bar"
+            role="region"
+            tabIndex={0}
+            aria-label="All PHONIX Games"
+          >
+            {PHONIX_MODULES.map((mod) => {
+              const quest = questByModule[mod.id];
+              const done = quest ? quest.progress >= quest.target : false;
+              return (
+                <button
+                  key={mod.id}
+                  type="button"
+                  className="ig-story-item"
+                  onClick={() => {
+                    playTap();
+                    onOpenModule(mod.id, mod.dualModes ? 'tetris' : null);
+                  }}
+                >
+                  <div className={`ig-story-ring ${done ? 'ig-story-ring--done' : 'ig-story-ring--active'}`}>
+                    <div className="ig-story-avatar">
+                      <span aria-hidden="true">{mod.icon}</span>
+                      {done && (
+                        <span className="ig-story-check" aria-label="Completed">
+                          <Check size={12} strokeWidth={3} />
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <span className="ig-story-label">{quest.title}</span>
-                <span className="ig-story-count tabular-nums">
-                  {quest.progress}/{quest.target}
-                </span>
-              </button>
-            );
-          })}
+                  <span className="ig-story-label">{mod.shortLabel}</span>
+                  <span className="ig-story-count tabular-nums">
+                    {quest ? `${quest.progress}/${quest.target}` : mod.locked ? 'Code' : 'Play'}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            className="ig-stories-arrow ig-stories-arrow--right"
+            onClick={() => scrollStories(1)}
+            aria-label="Scroll games right"
+          >
+            <ChevronRight size={18} strokeWidth={2.5} />
+          </button>
         </section>
 
-        {/* Instagram Feed Posts (All 6 Games) */}
+        {/* Instagram Feed Posts (All 7 Games in Matching Order) */}
         <section className="ig-posts-list" aria-label="PHONIX Games Feed">
           {PHONIX_MODULES.map((mod) => {
             const liked = Boolean(likedIds[mod.id]);
