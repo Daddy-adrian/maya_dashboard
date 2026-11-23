@@ -20,16 +20,19 @@ function shuffle(arr) {
   return copy;
 }
 
-function randomizeStoryChoices(story) {
+function randomizeStoryChoices(story, shuffleQuestions = false) {
   if (!story || !Array.isArray(story.questions)) return story;
+  const baseQuestions = shuffleQuestions ? shuffle(story.questions) : story.questions;
+  const setLabels = ['A', 'B'];
   return {
     ...story,
-    questions: story.questions.map((q) => {
+    questions: baseQuestions.map((q, qIdx) => {
       if (!Array.isArray(q.options)) return q;
       const indexed = q.options.map((text, i) => ({ text, isCorrect: i === q.correctIndex }));
       const mixed = shuffle(indexed);
       return {
         ...q,
+        set: setLabels[qIdx] || q.set,
         options: mixed.map((m) => m.text),
         correctIndex: mixed.findIndex((m) => m.isCorrect)
       };
@@ -52,6 +55,7 @@ export default function StoryGame({ onExit }) {
     setA: { solved: false, wrong: [], mistake: false },
     setB: { solved: false, wrong: [], mistake: false }
   });
+  const [storyMistakes, setStoryMistakes] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
 
   const speakingRef = useRef(false);
@@ -114,6 +118,7 @@ export default function StoryGame({ onExit }) {
     setStep('story');
     setShowComplete(false);
     setBanner(null);
+    setStoryMistakes(0);
     setQuiz({
       setA: { solved: false, wrong: [], mistake: false },
       setB: { solved: false, wrong: [], mistake: false }
@@ -193,6 +198,27 @@ export default function StoryGame({ onExit }) {
     } else {
       setCombo(0);
       playNearMiss();
+      const nextMistakes = storyMistakes + 1;
+      if (nextMistakes >= 2) {
+        // More than 1 mistake: send back to the story and reshuffle questions + answer choices
+        stopSpeech();
+        playPageTurn();
+        setStoryMistakes(0);
+        setStories((prev) =>
+          prev.map((s, idx) => (idx === currentIdx ? randomizeStoryChoices(s, true) : s))
+        );
+        setQuiz({
+          setA: { solved: false, wrong: [], mistake: false },
+          setB: { solved: false, wrong: [], mistake: false }
+        });
+        setDirection(-1);
+        setStep('story');
+        setBanner({ type: 'coach', text: "2 misses — let's re-read the story! Questions reshuffled." });
+        announce('Two misses. Returning to the story with reshuffled questions.');
+        return;
+      }
+
+      setStoryMistakes(nextMistakes);
       setQuiz({
         ...quiz,
         [setKey]: {
@@ -201,8 +227,8 @@ export default function StoryGame({ onExit }) {
           wrong: state.wrong.includes(optIdx) ? state.wrong : [...state.wrong, optIdx]
         }
       });
-      setBanner({ type: 'coach', text: 'Almost! Think back to the story and try another choice.' });
-      announce('Almost! Try another choice.');
+      setBanner({ type: 'coach', text: "Almost! One more miss and we'll re-read the story." });
+      announce('Almost! One more miss and we will re-read the story.');
     }
   }
 

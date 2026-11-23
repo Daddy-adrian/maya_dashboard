@@ -67,7 +67,7 @@ export default function NextLevelReadingGame({ onExit }) {
   const [pin, setPin] = useState('');
   const [pinError, setPinError] = useState('');
 
-  const [stories] = useState(buildOrderedStories);
+  const [stories, setStories] = useState(buildOrderedStories);
   const [completedIds, setCompletedIds] = useState({});
   const [currentIdx, setCurrentIdx] = useState(0);
   const [step, setStep] = useState('story'); // 'story' | 'setA' | 'setB'
@@ -77,6 +77,7 @@ export default function NextLevelReadingGame({ onExit }) {
   const [combo, setCombo] = useState(0);
   const [banner, setBanner] = useState(null);
   const [quiz, setQuiz] = useState(() => createEmptyQuiz(stories[0]));
+  const [storyMistakes, setStoryMistakes] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
 
   const speakingRef = useRef(false);
@@ -132,6 +133,7 @@ export default function NextLevelReadingGame({ onExit }) {
     setStep('story');
     setShowComplete(false);
     setBanner(null);
+    setStoryMistakes(0);
     setQuiz(createEmptyQuiz(stories[idx]));
   }
 
@@ -206,6 +208,30 @@ export default function NextLevelReadingGame({ onExit }) {
     } else {
       setCombo(0);
       playNearMiss();
+      const nextMistakes = storyMistakes + 1;
+      if (nextMistakes >= 2) {
+        // More than 1 mistake: send back to the comic and reshuffle all questions + choices
+        stopSpeech();
+        playPageTurn();
+        setStoryMistakes(0);
+        const curStory = stories[currentIdx];
+        const allMixed = randomizeQuestions(shuffle([...(curStory.setA || []), ...(curStory.setB || [])]));
+        const splitAt = Math.ceil(allMixed.length / 2);
+        const reshuffledStory = {
+          ...curStory,
+          setA: allMixed.slice(0, splitAt),
+          setB: allMixed.slice(splitAt)
+        };
+        setStories((prev) => prev.map((s, i) => (i === currentIdx ? reshuffledStory : s)));
+        setQuiz(createEmptyQuiz(reshuffledStory));
+        setDirection(-1);
+        setStep('story');
+        setBanner({ type: 'coach', text: "2 misses — let's re-read the comic! Questions reshuffled." });
+        announce('Two misses. Returning to the comic with reshuffled questions.');
+        return;
+      }
+
+      setStoryMistakes(nextMistakes);
       const nextSet = quiz[setKey].map((item, i) =>
         i === qIdx
           ? {
@@ -216,8 +242,8 @@ export default function NextLevelReadingGame({ onExit }) {
           : item
       );
       setQuiz({ ...quiz, [setKey]: nextSet });
-      setBanner({ type: 'coach', text: 'Almost! Think back to the story and try another choice.' });
-      announce('Almost! Try another choice.');
+      setBanner({ type: 'coach', text: "Almost! One more miss and we'll re-read the comic." });
+      announce('Almost! One more miss and we will re-read the comic.');
     }
   }
 
