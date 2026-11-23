@@ -196,39 +196,23 @@ export default function StoryGame({ onExit }) {
         setShowComplete(true);
       }
     } else {
+      // On any mistake: send back to the story and reshuffle questions + answer choices
       setCombo(0);
       playNearMiss();
-      const nextMistakes = storyMistakes + 1;
-      if (nextMistakes >= 2) {
-        // More than 1 mistake: send back to the story and reshuffle questions + answer choices
-        stopSpeech();
-        playPageTurn();
-        setStoryMistakes(0);
-        setStories((prev) =>
-          prev.map((s, idx) => (idx === currentIdx ? randomizeStoryChoices(s, true) : s))
-        );
-        setQuiz({
-          setA: { solved: false, wrong: [], mistake: false },
-          setB: { solved: false, wrong: [], mistake: false }
-        });
-        setDirection(-1);
-        setStep('story');
-        setBanner({ type: 'coach', text: "2 misses — let's re-read the story! Questions reshuffled." });
-        announce('Two misses. Returning to the story with reshuffled questions.');
-        return;
-      }
-
-      setStoryMistakes(nextMistakes);
+      stopSpeech();
+      playPageTurn();
+      setStoryMistakes(0);
+      setStories((prev) =>
+        prev.map((s, idx) => (idx === currentIdx ? randomizeStoryChoices(s, true) : s))
+      );
       setQuiz({
-        ...quiz,
-        [setKey]: {
-          ...state,
-          mistake: true,
-          wrong: state.wrong.includes(optIdx) ? state.wrong : [...state.wrong, optIdx]
-        }
+        setA: { solved: false, wrong: [], mistake: false },
+        setB: { solved: false, wrong: [], mistake: false }
       });
-      setBanner({ type: 'coach', text: "Almost! One more miss and we'll re-read the story." });
-      announce('Almost! One more miss and we will re-read the story.');
+      setDirection(-1);
+      setStep('story');
+      setBanner({ type: 'coach', text: "Oops! Let's re-read the story — questions reshuffled." });
+      announce('Incorrect. Returning to the story with reshuffled questions.');
     }
   }
 

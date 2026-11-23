@@ -206,44 +206,26 @@ export default function NextLevelReadingGame({ onExit }) {
         setShowComplete(true);
       }
     } else {
+      // On any mistake: send back to the comic and reshuffle all questions + choices
       setCombo(0);
       playNearMiss();
-      const nextMistakes = storyMistakes + 1;
-      if (nextMistakes >= 2) {
-        // More than 1 mistake: send back to the comic and reshuffle all questions + choices
-        stopSpeech();
-        playPageTurn();
-        setStoryMistakes(0);
-        const curStory = stories[currentIdx];
-        const allMixed = randomizeQuestions(shuffle([...(curStory.setA || []), ...(curStory.setB || [])]));
-        const splitAt = Math.ceil(allMixed.length / 2);
-        const reshuffledStory = {
-          ...curStory,
-          setA: allMixed.slice(0, splitAt),
-          setB: allMixed.slice(splitAt)
-        };
-        setStories((prev) => prev.map((s, i) => (i === currentIdx ? reshuffledStory : s)));
-        setQuiz(createEmptyQuiz(reshuffledStory));
-        setDirection(-1);
-        setStep('story');
-        setBanner({ type: 'coach', text: "2 misses — let's re-read the comic! Questions reshuffled." });
-        announce('Two misses. Returning to the comic with reshuffled questions.');
-        return;
-      }
-
-      setStoryMistakes(nextMistakes);
-      const nextSet = quiz[setKey].map((item, i) =>
-        i === qIdx
-          ? {
-              ...item,
-              mistake: true,
-              wrong: item.wrong.includes(optIdx) ? item.wrong : [...item.wrong, optIdx]
-            }
-          : item
-      );
-      setQuiz({ ...quiz, [setKey]: nextSet });
-      setBanner({ type: 'coach', text: "Almost! One more miss and we'll re-read the comic." });
-      announce('Almost! One more miss and we will re-read the comic.');
+      stopSpeech();
+      playPageTurn();
+      setStoryMistakes(0);
+      const curStory = stories[currentIdx];
+      const allMixed = randomizeQuestions(shuffle([...(curStory.setA || []), ...(curStory.setB || [])]));
+      const splitAt = Math.ceil(allMixed.length / 2);
+      const reshuffledStory = {
+        ...curStory,
+        setA: allMixed.slice(0, splitAt),
+        setB: allMixed.slice(splitAt)
+      };
+      setStories((prev) => prev.map((s, i) => (i === currentIdx ? reshuffledStory : s)));
+      setQuiz(createEmptyQuiz(reshuffledStory));
+      setDirection(-1);
+      setStep('story');
+      setBanner({ type: 'coach', text: "Oops! Let's re-read the comic — questions reshuffled." });
+      announce('Incorrect. Returning to the comic with reshuffled questions.');
     }
   }
 
